@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Kino XII</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="header-styles.css" />
+    <link rel="preconnect" href="https://googleapis.com" />
+    <link rel="preconnect" href="https://gstatic.com" crossorigin />
+    <link
+      href="https://googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="header-brand-group">
+        <h2 class="brand header-brand">
+          Kino <span class="accent-text">XII</span>
+        </h2>
+
+        <a href="/sessions">Sessions</a>
+      </div>
+
+      <div class="header-actions">
+        <search class="header-search">
+          <label for="movie" class="visually-hidden">
+            Search films and live events
+          </label>
+
+          <input
+            type="search"
+            id="movie"
+            name="q"
+            placeholder="Search films and live events"
+          />
+
+          <button type="submit" aria-label="Search">
+            <!-- SVG -->
+          </button>
+        </search>
+
+        <button class="auth-button sign-up-button" type="button">
+          Sign Up
+        </button>
+
+        <button class="auth-button login-button" type="button">Log In</button>
+      </div>
+    </header>
+    <main>
+      <!-- think of a strategy  to organize the content; avoid unnecessary nesting-->
+      <!-- Pick a heading to be the h1 -->
+      <section class="hero-carousel">
+        <button
+          class="carousel-button prev"
+          aria-label="Previous slide"
+        ></button>
+        <button class="carousel-button next" aria-label="Next slide"></button>
+        <ul>
+          <li class="carousel-slide"></li>
+          <li class="carousel-slide"></li>
+          <li class="carousel-slide"></li>
+          <li class="carousel-slide"></li>
+        </ul>
+      </section>
+      <section class="now-playing"></section>
+      <div class="now-playing-card"></div>
+      <div class="now-playing-card"></div>
+      <div class="now-playing-card"></div>
+      <div class="now-playing-card"></div>
+      <div class="now-playing-card"></div>
+      <div class="now-playing-card"></div>
+      <section class="coming-soon"></section>
+      <div class="coming-soon-card"></div>
+      <div class="coming-soon-card"></div>
+      <div class="coming-soon-card"></div>
+      <div class="coming-soon-card"></div>
+    </main>
+    <footer>
+      <p class="brand footer-brand">
+        Kino <span class="accent-text">XII</span>
+      </p>
+      <p class="copyright-statement">All rights reserved</p>
+    </footer>
+  </body>
+</html>

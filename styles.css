@@ -1,0 +1,57 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+:root{
+    --page-bg: #070C1C;
+    --card-bg: #1E2031;
+    --raised-bg: #2A2D3E;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A9A9A9;
+    --test-disabled: #505261;
+    --reddish-helper: #EC3013;
+    --greenish-helper: #4ADE80;
+    --orangish-helper: #E27E04;
+    --whitish-tint: #FFFFFF1a;
+    --reddish-tint: #EC30131a;
+    --greenish-tint: #4ADE801a;
+    --orangish-tint: #E27E041a;
+}
+
+body{
+    background: var(--page-bg);
+    color: var(--text-primary);
+    font-family: 'Archivo', sans-serif;
+}
+
+.brand span{
+    color: var(--reddish-helper);
+}
+
+.hero-carousel {
+    position: relative;
+    width: 100%;
+    height: 760px;
+}
+
+.hero-carousel ul {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.carousel-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    object-fit: cover;
+    object-position: center;
+}
