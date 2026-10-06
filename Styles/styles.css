@@ -58,6 +58,10 @@ body {
   object-position: center;
 }
 
+.carousel-slide[data-active] {
+  opacity: 1;
+}
+
 .movie-section {
   padding: 20px 21px;
   overflow: hidden;
@@ -140,8 +144,8 @@ body {
 }
 
 .now-playing-card {
-  width: 136px;
-  height: 239px;
+  width: 260px;
+  height: 452px;
   padding: 7px;
 }
 
