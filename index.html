@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Kino XII</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="header-styles.css" />
-    <link rel="preconnect" href="https://googleapis.com" />
+    <link rel="stylesheet" href="Styles/styles.css" /> <!-- main page stylesheet -->
+    <link rel="stylesheet" href="Styles/header-styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://gstatic.com" crossorigin />
     <link
-      href="https://googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -49,8 +49,6 @@
       </div>
     </header>
     <main>
-      <!-- think of a strategy  to organize the content; avoid unnecessary nesting-->
-      <!-- Pick a heading to be the h1 -->
       <section class="hero-carousel">
         <button
           class="carousel-button prev"
@@ -64,20 +62,64 @@
           <li class="carousel-slide"></li>
         </ul>
       </section>
-      <section class="now-playing"></section>
-      <h1>Now Playing</h1>
-      <div class="now-playing-card"></div>
-      <div class="now-playing-card"></div>
-      <div class="now-playing-card"></div>
-      <div class="now-playing-card"></div>
-      <div class="now-playing-card"></div>
-      <div class="now-playing-card"></div>
-      <section class="coming-soon"></section>
-      <h2>Coming Soon</h2>
-      <div class="coming-soon-card"></div>
-      <div class="coming-soon-card"></div>
-      <div class="coming-soon-card"></div>
-      <div class="coming-soon-card"></div>
+      <section
+        class="movie-section now-playing"
+        aria-label="Now Playing"
+      >
+        <div class="section-heading">
+          <h1 id="now-playing-title">Now Playing</h1>
+          <button class="section-link" type="button">See all</button>
+        </div>
+        <div class="movie-card-rail now-playing-rail">
+          <article
+            class="now-playing-card"
+            aria-label="Movie now playing"
+          ></article>
+          <article
+            class="now-playing-card"
+            aria-label="Movie now playing"
+          ></article>
+          <article
+            class="now-playing-card"
+            aria-label="Movie now playing"
+          ></article>
+          <article
+            class="now-playing-card"
+            aria-label="Movie now playing"
+          ></article>
+          <article
+            class="now-playing-card"
+            aria-label="Movie now playing"
+          ></article>
+        </div>
+      </section>
+      <section
+        class="movie-section coming-soon"
+        aria-label="Coming Soon"
+      >
+        <div class="section-heading">
+          <h2 id="coming-soon-title">Coming Soon...</h2>
+          <button class="section-link" type="button">See all</button>
+        </div>
+        <div class="movie-card-rail coming-soon-rail">
+          <article
+            class="coming-soon-card"
+            aria-label="Movie coming soon"
+          ></article>
+          <article
+            class="coming-soon-card"
+            aria-label="Movie coming soon"
+          ></article>
+          <article
+            class="coming-soon-card"
+            aria-label="Movie coming soon"
+          ></article>
+          <article
+            class="coming-soon-card"
+            aria-label="Movie coming soon"
+          ></article>
+        </div>
+      </section>
     </main>
     <footer>
       <p class="brand footer-brand">

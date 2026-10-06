@@ -1,57 +1,178 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
-:root{
-    --page-bg: #070C1C;
-    --card-bg: #1E2031;
-    --raised-bg: #2A2D3E;
-    --text-primary: #FFFFFF;
-    --text-secondary: #A9A9A9;
-    --test-disabled: #505261;
-    --reddish-helper: #EC3013;
-    --greenish-helper: #4ADE80;
-    --orangish-helper: #E27E04;
-    --whitish-tint: #FFFFFF1a;
-    --reddish-tint: #EC30131a;
-    --greenish-tint: #4ADE801a;
-    --orangish-tint: #E27E041a;
+:root {
+  --page-bg: #070c1c;
+  --card-bg: #1e2031;
+  --raised-bg: #2a2d3e;
+  --text-primary: #ffffff;
+  --text-secondary: #a9a9a9;
+  --test-disabled: #505261;
+  --reddish-helper: #ec3013;
+  --greenish-helper: #4ade80;
+  --orangish-helper: #e27e04;
+  --whitish-tint: #ffffff1a;
+  --reddish-tint: #ec30131a;
+  --greenish-tint: #4ade801a;
+  --orangish-tint: #e27e041a;
 }
 
-body{
-    background: var(--page-bg);
-    color: var(--text-primary);
-    font-family: 'Archivo', sans-serif;
+body {
+  background: var(--page-bg);
+  color: var(--text-primary);
+  font-family: "Archivo", sans-serif;
+  min-height: 100vh;
 }
 
-.brand span{
-    color: var(--reddish-helper);
+.brand span {
+  color: var(--reddish-helper);
 }
 
 .hero-carousel {
-    position: relative;
-    width: 100%;
-    height: 760px;
+  position: relative;
+  width: 100%;
+  height: 760px;
 }
 
 .hero-carousel ul {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .carousel-slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    background-size: cover;
-    background-position: center;
-    object-fit: cover;
-    object-position: center;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  background-size: cover;
+  background-position: center;
+  object-fit: cover;
+  object-position: center;
+}
+
+.movie-section {
+  padding: 20px 21px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.section-heading h1,
+.section-heading h2 {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.section-link {
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--reddish-helper);
+  font: inherit;
+  font-size: 8px;
+  cursor: pointer;
+}
+
+.section-link:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+.movie-card-rail {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 64px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 64px),
+    transparent 100%
+  );
+}
+
+.movie-card-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.now-playing-rail {
+  padding-bottom: 10px;
+  height: 502px;
+}
+
+.coming-soon-rail {
+  padding-bottom: 10px;
+  height: 230px;
+}
+
+.now-playing-card,
+.coming-soon-card {
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--card-bg);
+}
+
+.now-playing-card {
+  width: 136px;
+  height: 239px;
+  padding: 7px;
+}
+
+.now-playing-card::before {
+  display: block;
+  height: 159px;
+  border-radius: 8px;
+  background: var(--raised-bg);
+  content: "";
+}
+
+.coming-soon-card {
+  display: flex;
+  align-items: center;
+  width: 250px;
+  height: 86px;
+  padding: 6px;
+}
+
+.coming-soon-card::before {
+  display: block;
+  flex: 0 0 120px;
+  height: 74px;
+  border-radius: 8px;
+  background: var(--raised-bg);
+  content: "";
+}
+
+@media (max-width: 600px) {
+  .movie-section {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
 }
