@@ -34,7 +34,8 @@ body {
 .hero-carousel {
   position: relative;
   width: 100%;
-  height: 760px;
+  height: min(760px, 100vh);
+  min-height: 480px;
 }
 
 .hero-carousel ul {
@@ -52,10 +53,116 @@ body {
   inset: 0;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
-  background-size: cover;
-  background-position: center;
+}
+
+.carousel-slide::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(7, 12, 28, 0.9) 0%,
+    rgba(7, 12, 28, 0.35) 58%,
+    rgba(7, 12, 28, 0.15) 100%
+  );
+  content: "";
+}
+
+.carousel-poster {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.carousel-content {
+  position: absolute;
+  z-index: 1;
+  top: 44%;
+  left: 4.5%;
+  max-width: min(420px, 85%);
+  transform: translateY(-50%);
+}
+
+.carousel-content h1 {
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.carousel-controls {
+  position: absolute;
+  z-index: 2;
+  right: 4%;
+  bottom: 24px;
+  left: 4.5%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.carousel-pagination {
+  display: flex;
+  flex: 1;
+  gap: 5px;
+}
+
+.carousel-page {
+  flex: 1;
+  height: 2px;
+  border: 0;
+  background: var(--text-primary);
+  cursor: pointer;
+}
+
+.carousel-page[data-active] {
+  background: var(--reddish-helper);
+}
+
+.carousel-arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  background: rgba(7, 12, 28, 0.45);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.carousel-button::before {
+  display: inline-block;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.carousel-button.prev::before {
+  content: "‹";
+}
+
+.carousel-button.next::before {
+  content: "›";
+}
+
+.carousel-button:focus-visible,
+.carousel-page:focus-visible {
+  outline: 2px solid var(--reddish-helper);
+  outline-offset: 3px;
+}
+
+.carousel-status {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+[hidden] {
+  display: none !important;
 }
 
 .carousel-slide[data-active] {
@@ -175,6 +282,21 @@ body {
 }
 
 @media (max-width: 600px) {
+  .hero-carousel {
+    min-height: 420px;
+  }
+
+  .carousel-controls {
+    right: 16px;
+    left: 16px;
+    bottom: 16px;
+  }
+
+  .carousel-button {
+    width: 38px;
+    height: 38px;
+  }
+
   .movie-section {
     padding-right: 16px;
     padding-left: 16px;
