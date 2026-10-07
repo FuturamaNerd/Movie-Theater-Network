@@ -10,13 +10,18 @@ if (carousel) {
   const status = carousel.querySelector(".carousel-status");
 
   function setActiveSlide(index, slides, pageButtons) {
+    // Set the active slide and update pagination buttons
     slides.forEach((slide, slideIndex) => {
       slide.toggleAttribute("data-active", slideIndex === index);
-      pageButtons[slideIndex].toggleAttribute("data-active", slideIndex === index);
+      pageButtons[slideIndex].toggleAttribute(
+        "data-active",
+        slideIndex === index,
+      );
     });
   }
 
   async function initializeCarousel() {
+    // Fetch title and poster from API and populate the carousel
     try {
       const movies = await fetchMovies();
       if (movies.some((movie) => !movie.title || !movie.posterUrl)) {
@@ -24,7 +29,9 @@ if (carousel) {
       }
 
       slideList.replaceChildren(
+        // replace placeholder slides in index and populate the carousel with API data
         ...movies.map((movie, index) => {
+          // Create a slide for each movie
           const slide = document.createElement("li");
           slide.className = "carousel-slide";
           if (index === 0) slide.setAttribute("data-active", "");
@@ -46,7 +53,7 @@ if (carousel) {
         }),
       );
 
-      const slides = [...slideList.querySelectorAll(".carousel-slide")];
+      const slides = [...slideList.querySelectorAll(".carousel-slide")]; // Get the newly created slides after replacing the placeholder slides
       const pageButtons = movies.map((movie, index) => {
         const button = document.createElement("button");
         button.type = "button";
@@ -61,6 +68,7 @@ if (carousel) {
       });
 
       carousel.querySelectorAll(".carousel-button").forEach((button) => {
+        // Add event listeners to the arrow buttons
         button.addEventListener("click", () => {
           const activeIndex = slides.findIndex((slide) =>
             slide.hasAttribute("data-active"),
@@ -74,7 +82,7 @@ if (carousel) {
           setActiveSlide(nextIndex, slides, pageButtons);
         });
       });
-
+      //error handling for empty movie list and API fetch failure
       controls.hidden = movies.length === 0;
       if (movies.length === 0) {
         status.hidden = false;
