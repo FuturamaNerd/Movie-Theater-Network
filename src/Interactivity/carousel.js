@@ -1,5 +1,5 @@
 import { getWrappedSlideIndex } from "./carousel-navigation.js";
-import { fetchMovies } from "../API/movies.js";
+import { fetchFeaturedMovies } from "../API/movies.js";
 
 const carousel = document.querySelector(".hero-carousel");
 
@@ -23,7 +23,7 @@ if (carousel) {
   async function initializeCarousel() {
     // Fetch title and poster from API and populate the carousel
     try {
-      const movies = await fetchMovies();
+      const movies = await fetchFeaturedMovies();
       if (movies.some((movie) => !movie.title || !movie.posterUrl)) {
         throw new TypeError("Each movie must include a title and posterUrl");
       }
