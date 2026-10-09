@@ -302,3 +302,8 @@ body {
     padding-left: 16px;
   }
 }
+
+footer {
+ display: flex;
+ justify-content: space-between
+}
