@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream
-import { fetchMovies } from "../../JS-modules/API/movies.js";
-=======
 import { fetchFeaturedMovies } from "../../src/API/movies.js";
->>>>>>> Stashed changes
+
 
 describe("fetchMovies", () => {
   it("returns movies from the API", () => {
