@@ -77,16 +77,94 @@ body {
 .carousel-content {
   position: absolute;
   z-index: 1;
-  top: 44%;
+  top: 52%;
   left: 4.5%;
-  max-width: min(420px, 85%);
+  max-width: min(620px, 85%);
   transform: translateY(-50%);
 }
 
+.carousel-premiere {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(7, 12, 28, 0.45);
+  color: var(--reddish-helper);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .carousel-content h1 {
+  margin-bottom: 16px;
   font-size: clamp(24px, 3vw, 40px);
   font-weight: 700;
   text-transform: uppercase;
+}
+
+.carousel-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  list-style: none;
+}
+
+.carousel-metadata li {
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.carousel-metadata .carousel-age-rating {
+  background: var(--reddish-tint);
+  color: var(--reddish-helper);
+}
+
+.carousel-synopsis {
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.carousel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.carousel-action {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 999px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.carousel-buy-tickets {
+  background: var(--reddish-helper);
+}
+
+.carousel-all-sessions {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.carousel-action:hover {
+  filter: brightness(1.12);
+}
+
+.carousel-action:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
 }
 
 .carousel-controls {
@@ -170,7 +248,7 @@ body {
 }
 
 .movie-section {
-  padding: 20px 21px;
+  padding: 24px 44px;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -179,13 +257,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .section-heading h1,
 .section-heading h2 {
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.2;
   text-transform: uppercase;
@@ -197,7 +275,7 @@ body {
   background: transparent;
   color: var(--reddish-helper);
   font: inherit;
-  font-size: 8px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -233,52 +311,160 @@ body {
 }
 
 .now-playing-rail {
-  padding-bottom: 10px;
-  height: 502px;
+  align-items: flex-start;
+  padding-bottom: 12px;
+  height: 326px;
 }
 
 .coming-soon-rail {
-  padding-bottom: 10px;
-  height: 230px;
+  align-items: flex-start;
+  padding-bottom: 12px;
+  height: 132px;
 }
 
 .now-playing-card,
 .coming-soon-card {
+  position: relative;
   flex: 0 0 auto;
   overflow: hidden;
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   background: var(--card-bg);
 }
 
 .now-playing-card {
-  width: 260px;
-  height: 452px;
+  display: flex;
+  flex-direction: column;
+  width: 172px;
+  height: 300px;
   padding: 7px;
 }
 
-.now-playing-card::before {
+.movie-card-poster {
   display: block;
-  height: 159px;
+  min-width: 0;
+  min-height: 0;
   border-radius: 8px;
-  background: var(--raised-bg);
-  content: "";
+  object-fit: cover;
+}
+
+.now-playing-card .movie-card-poster {
+  width: 100%;
+  height: 202px;
+}
+
+.movie-card-content {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  padding-top: 7px;
+}
+
+.movie-card-title {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie-card-details {
+  overflow: hidden;
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.movie-card-age-rating {
+  display: inline-flex;
+  min-width: 24px;
+  min-height: 20px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--reddish-tint);
+  color: var(--reddish-helper);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.movie-card-buy-ticket {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--reddish-helper);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.movie-card-buy-ticket:hover {
+  filter: brightness(1.12);
+}
+
+.movie-card-buy-ticket:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
 }
 
 .coming-soon-card {
   display: flex;
   align-items: center;
-  width: 250px;
-  height: 86px;
+  gap: 9px;
+  width: 320px;
+  height: 112px;
   padding: 6px;
 }
 
-.coming-soon-card::before {
-  display: block;
-  flex: 0 0 120px;
-  height: 74px;
-  border-radius: 8px;
-  background: var(--raised-bg);
-  content: "";
+.coming-soon-card .movie-card-poster {
+  width: 155px;
+  height: 98px;
+  flex: 0 0 155px;
+}
+
+.coming-soon-card .movie-card-content {
+  align-self: stretch;
+  justify-content: center;
+  padding-top: 0;
+}
+
+.coming-soon-card .movie-card-title {
+  font-size: 11px;
+}
+
+.coming-soon-card .movie-card-details {
+  font-size: 9px;
+}
+
+.coming-soon-card .movie-card-footer {
+  justify-content: flex-start;
+  margin-top: 6px;
+}
+
+.movie-section-status {
+  padding: 12px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
 }
 
 @media (max-width: 600px) {
@@ -292,18 +478,86 @@ body {
     bottom: 16px;
   }
 
+  .carousel-content {
+    top: 50%;
+    left: 16px;
+    max-width: calc(100% - 32px);
+  }
+
+  .carousel-premiere {
+    margin-bottom: 12px;
+    font-size: 10px;
+  }
+
+  .carousel-content h1 {
+    margin-bottom: 12px;
+  }
+
+  .carousel-metadata {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .carousel-metadata li {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .carousel-synopsis {
+    margin-bottom: 14px;
+    font-size: 12px;
+  }
+
+  .carousel-action {
+    min-height: 40px;
+    padding: 0 17px;
+    font-size: 12px;
+  }
+
   .carousel-button {
     width: 38px;
     height: 38px;
   }
 
   .movie-section {
-    padding-right: 16px;
-    padding-left: 16px;
+    padding: 20px 16px;
+  }
+
+  .now-playing-rail {
+    height: 312px;
+  }
+
+  .now-playing-card {
+    width: 160px;
+    height: 286px;
+  }
+
+  .now-playing-card .movie-card-poster {
+    height: 188px;
+  }
+
+  .coming-soon-rail {
+    height: 126px;
+  }
+
+  .coming-soon-card {
+    width: 290px;
+    height: 106px;
+  }
+
+  .coming-soon-card .movie-card-poster {
+    width: 135px;
+    flex-basis: 135px;
+  }
+
+  .section-heading h1,
+  .section-heading h2 {
+    font-size: 15px;
   }
 }
 
-footer {
+footer { /*adjust footer to better match figma*/
+ padding: 20px 21px;
  display: flex;
  justify-content: space-between
 }
