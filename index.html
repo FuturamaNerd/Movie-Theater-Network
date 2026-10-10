@@ -76,28 +76,8 @@
           <h1 id="now-playing-title">Now Playing</h1>
           <button class="section-link" type="button">See all</button>
         </div>
-        <div class="movie-card-rail now-playing-rail">
-          <article
-            class="now-playing-card"
-            aria-label="Movie now playing"
-          ></article>
-          <article
-            class="now-playing-card"
-            aria-label="Movie now playing"
-          ></article>
-          <article
-            class="now-playing-card"
-            aria-label="Movie now playing"
-          ></article>
-          <article
-            class="now-playing-card"
-            aria-label="Movie now playing"
-          ></article>
-          <article
-            class="now-playing-card"
-            aria-label="Movie now playing"
-          ></article>
-        </div>
+        <div class="movie-card-rail now-playing-rail"></div>
+        <p class="movie-section-status now-playing-status" role="status" hidden></p>
       </section>
       <section
         class="movie-section coming-soon"
@@ -107,24 +87,8 @@
           <h2 id="coming-soon-title">Coming Soon...</h2>
           <button class="section-link" type="button">See all</button>
         </div>
-        <div class="movie-card-rail coming-soon-rail">
-          <article
-            class="coming-soon-card"
-            aria-label="Movie coming soon"
-          ></article>
-          <article
-            class="coming-soon-card"
-            aria-label="Movie coming soon"
-          ></article>
-          <article
-            class="coming-soon-card"
-            aria-label="Movie coming soon"
-          ></article>
-          <article
-            class="coming-soon-card"
-            aria-label="Movie coming soon"
-          ></article>
-        </div>
+        <div class="movie-card-rail coming-soon-rail"></div>
+        <p class="movie-section-status coming-soon-status" role="status" hidden></p>
       </section>
     </main>
     <footer>
@@ -134,5 +98,6 @@
       <p class="copyright-statement">All rights reserved</p>
     </footer>
     <script type="module" src="src/Interactivity/carousel.js"></script>
+    <script type="module" src="src/Interactivity/movie-sections.js"></script>
   </body>
 </html>
