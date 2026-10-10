@@ -64,21 +64,3 @@ export async function fetchComingSoonMovies() {
 
   return movies;
 }
-
-/** @returns {Promise<import("../models/movie-interfaces").MovieData[]>} */
-export async function fetchNowPlayingMovies() {
-  const response = await fetch(MOVIES_NOW_PLAYING_ENDPOINT);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch now playing movies: ${response.status}`);
-  }
-
-  const payload = await response.json();
-  const movies = Array.isArray(payload) ? payload : payload.data;
-
-  if (!Array.isArray(movies)) {
-    throw new TypeError("The now playing movies API response must contain a data array");
-  }
-
-  return movies;
-}

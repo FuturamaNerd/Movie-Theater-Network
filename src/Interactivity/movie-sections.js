@@ -1,6 +1,6 @@
 import { fetchComingSoonMovies, fetchNowPlayingMovies } from "../API/movies.js";
 
-/** @typedef {import("../models/movie-interfaces").MovieData} MovieData */
+/** @typedef {import("../models/movie-interfaces.js").MovieData} MovieData */
 
 /**
  * @param {MovieData} movie

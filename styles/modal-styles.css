@@ -1,0 +1,73 @@
+.theater-modal {
+  --modal-surface: #080d1b;
+  --modal-text: #f4f4f7;
+  --modal-muted: #858998;
+  --modal-input: #202232;
+  --modal-accent: #f04436;
+  color: var(--modal-text);
+  font-family: "Archivo", sans-serif;
+}
+
+.theater-modal .modal-dialog {
+  width: min(100%, 420px);
+  max-width: none;
+  margin: 0 auto;
+}
+
+.theater-modal .modal-content {
+  overflow: hidden;
+  color: inherit;
+  background: var(--modal-surface);
+  border: 1px solid rgb(255 255 255 / 5%);
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 38%);
+}
+
+.theater-modal .modal-header,
+.theater-modal .modal-body,
+.theater-modal .modal-footer {
+  border: 0;
+}
+
+.theater-modal .modal-header {
+  align-items: flex-start;
+}
+
+.theater-modal .modal-title {
+  color: var(--modal-text);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.theater-modal .btn-close {
+  opacity: 0.8;
+}
+
+.theater-modal .form-label {
+  display: block;
+  color: var(--modal-text);
+}
+
+.theater-modal .form-control {
+  color: var(--modal-text);
+  background-color: var(--modal-input);
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+
+.theater-modal .form-control::placeholder {
+  color: #a3a5af;
+  opacity: 1;
+}
+
+.theater-modal .form-control:focus {
+  color: var(--modal-text);
+  background-color: var(--modal-input);
+  border-color: #585d70;
+  box-shadow: 0 0 0 0.15rem rgb(255 255 255 / 10%);
+}
+
+.theater-modal .btn {
+  font-family: inherit;
+  font-weight: 600;
+}

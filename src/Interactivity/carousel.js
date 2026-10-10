@@ -1,6 +1,6 @@
 import { getWrappedSlideIndex } from "./carousel-navigation.js";
 import { fetchFeaturedMovies } from "../API/movies.js";
-/** @typedef {import("../models/movie-interfaces").MovieWithSynopsisData} MovieWithSynopsisData */
+/** @typedef {import("../models/movie-interfaces.js").MovieWithSynopsisData} MovieWithSynopsisData */
 
 const carousel = document.querySelector(".hero-carousel");
 
