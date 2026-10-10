@@ -3,10 +3,14 @@ describe("user registration", () => {
     const username = `new-user-${Date.now()}`;
     const email = `${username}@example.com`;
 
-    cy.intercept("POST", "**/signup-endpoint", {
+    cy.intercept(
+      "POST",
+      "https://api.kinoxii.redberryinternship.ge/api/register",
+      {
       statusCode: 201,
-      body: "<!doctype html><html><body><h1>Registration successful</h1></body></html>",
-    }).as("register");
+      body: { message: "Registration successful" },
+      },
+    ).as("register");
 
     cy.visit("/");
     cy.get(".sign-up-button").click();
@@ -24,7 +28,16 @@ describe("user registration", () => {
     cy.get("#signupModal form button[type='submit']").click();
 
     cy.wait("@register")
-      .its("response.statusCode")
-      .should("equal", 201);
+      .then(({ request, response }) => {
+        expect(response.statusCode).to.equal(201);
+        expect(request.headers["content-type"]).to.include("application/json");
+        expect(request.body).to.include({
+          username,
+          email,
+          password: "secret",
+          confirmPassword: "secret",
+        });
+        expect(request.body).not.to.have.property("avatar");
+      });
   });
 });

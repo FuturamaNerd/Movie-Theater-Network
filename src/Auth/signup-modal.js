@@ -1,3 +1,5 @@
+import { initializeRegistrationForm } from "../interactivity/registration-validation.js";
+
 export function initializeSignupModal(doc = document) {
   const signupButton = doc.querySelector(".sign-up-button");
   if (!signupButton) return;
@@ -24,6 +26,7 @@ export function initializeSignupModal(doc = document) {
       doc.body.append(signupModal);
     }
 
+    initializeRegistrationForm(signupModal.querySelector("form"));
     doc.defaultView.bootstrap.Modal.getOrCreateInstance(signupModal).show();
   });
 }
