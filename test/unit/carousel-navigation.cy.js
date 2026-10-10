@@ -1,4 +1,4 @@
-import { getWrappedSlideIndex } from "../../JS-modules/Interactivity/carousel-navigation.js";
+import { getWrappedSlideIndex } from "../../src/Interactivity/carousel-navigation.js";
 
 describe("carousel slide index wrapping", () => {
   it("wraps forward from the last slide to the first", () => {

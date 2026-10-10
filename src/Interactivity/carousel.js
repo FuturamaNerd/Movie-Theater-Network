@@ -1,5 +1,7 @@
 import { getWrappedSlideIndex } from "./carousel-navigation.js";
-import { fetchMovies } from "../API/movies.js";
+import { fetchFeaturedMovies } from "../API/movies.js";
+
+/** @typedef {import("../models/movie-interfaces").MovieWithSynopsisData} MovieWithSynopsisData */
 
 const carousel = document.querySelector(".hero-carousel");
 
@@ -23,9 +25,10 @@ if (carousel) {
   async function initializeCarousel() {
     // Fetch title and poster from API and populate the carousel
     try {
-      const movies = await fetchMovies();
-      if (movies.some((movie) => !movie.title || !movie.posterUrl)) {
-        throw new TypeError("Each movie must include a title and posterUrl");
+      /** @type {MovieWithSynopsisData[]} */
+      const movies = await fetchFeaturedMovies();
+      if (movies.some((movie) => !movie.title || !(movie.backdropUrl || movie.posterUrl))) {
+        throw new TypeError("Each movie must include a title and backdropUrl or posterUrl");
       }
 
       slideList.replaceChildren(
@@ -38,7 +41,7 @@ if (carousel) {
 
           const poster = document.createElement("img");
           poster.className = "carousel-poster";
-          poster.src = movie.posterUrl;
+          poster.src = movie.backdropUrl || movie.posterUrl;
           poster.alt = "";
           poster.setAttribute("aria-hidden", "true");
 
@@ -47,7 +50,64 @@ if (carousel) {
 
           const content = document.createElement("div");
           content.className = "carousel-content";
+          const releaseDate = new Date(movie.releaseDate);
+          if (!Number.isNaN(releaseDate.getTime())) {
+            const premiere = document.createElement("p");
+            premiere.className = "carousel-premiere";
+            const dateLabel = new Intl.DateTimeFormat("en", {
+              day: "numeric",
+              month: "short",
+              timeZone: "UTC",
+            })
+              .format(releaseDate)
+              .toUpperCase()
+              .replace(" SEP", " SEPT");
+            premiere.textContent = `PREMIERE · WEEK OF ${dateLabel}`;
+            content.append(premiere);
+          }
+
           content.append(title);
+
+          const metadata = document.createElement("ul");
+          metadata.className = "carousel-metadata";
+          if (Number.isFinite(movie.ageRating?.minAge)) {
+            const ageRating = document.createElement("li");
+            ageRating.className = "carousel-age-rating";
+            ageRating.textContent = String(movie.ageRating.minAge);
+            metadata.append(ageRating);
+          }
+          if (Number.isFinite(movie.runtimeMinutes)) {
+            const runtime = document.createElement("li");
+            runtime.textContent = `${movie.runtimeMinutes} Min`;
+            metadata.append(runtime);
+          }
+          for (const format of movie.formats ?? []) {
+            const formatBadge = document.createElement("li");
+            formatBadge.textContent = format.name;
+            metadata.append(formatBadge);
+          }
+          if (metadata.childElementCount > 0) content.append(metadata);
+
+          if (movie.synopsis) {
+            const synopsis = document.createElement("p");
+            synopsis.className = "carousel-synopsis";
+            synopsis.textContent = movie.synopsis;
+            content.append(synopsis);
+          }
+
+          const actions = document.createElement("div");
+          actions.className = "carousel-actions";
+          const buyTickets = document.createElement("a");
+          buyTickets.className = "carousel-action carousel-buy-tickets";
+          buyTickets.href = `/sessions?movie=${encodeURIComponent(movie.slug)}`;
+          buyTickets.textContent = "Buy tickets";
+
+          const allSessions = document.createElement("a");
+          allSessions.className = "carousel-action carousel-all-sessions";
+          allSessions.href = "/sessions";
+          allSessions.textContent = "All sessions";
+          actions.append(buyTickets, allSessions);
+          content.append(actions);
           slide.append(poster, content);
           return slide;
         }),
