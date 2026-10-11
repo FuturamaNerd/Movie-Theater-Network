@@ -1,6 +1,5 @@
 import {
   initializeLoginForm,
-  initializeLoginModal,
   validateLogin,
 } from "../../src/Auth/login-validation.js";
 
@@ -107,7 +106,22 @@ describe("login validation", () => {
   it("posts valid credentials and announces successful login", async () => {
     const form = createLoginForm();
     enterCredentials(form, " Elaine@example.com ", "secret");
-    window.fetch = jest.fn().mockResolvedValue({ status: 200, ok: true });
+    const user = {
+      id: 123,
+      username: "elaine",
+      email: "Elaine@example.com",
+      avatar: null,
+      fullName: null,
+      mobileNumber: null,
+      dateOfBirth: null,
+      age: null,
+      profileComplete: false,
+    };
+    window.fetch = jest.fn().mockResolvedValue({
+      status: 200,
+      ok: true,
+      json: () => Promise.resolve({ data: { user, token: "test-token" } }),
+    });
     const loginEvent = jest.fn();
     document.addEventListener("auth:login", loginEvent);
     const hide = jest.fn();
@@ -130,6 +144,14 @@ describe("login validation", () => {
       },
     );
     expect(loginEvent).toHaveBeenCalledTimes(1);
+    expect(loginEvent.mock.calls[0][0].detail).toEqual({
+      email: "Elaine@example.com",
+      user,
+    });
+    expect(JSON.parse(window.sessionStorage.getItem("auth-session"))).toEqual({
+      user,
+      token: "test-token",
+    });
     expect(hide).toHaveBeenCalledTimes(1);
   });
 
@@ -151,36 +173,4 @@ describe("login validation", () => {
     expect(clickSignup).toHaveBeenCalledTimes(1);
   });
 
-  it("loads and opens the login modal from the header button", async () => {
-    const modalMarkup = `
-      <div id="loginModal">
-        <form>
-          <div class="login-field"><input name="email" /></div>
-          <div class="login-field"><input name="password" /></div>
-          <a class="login-signup-link" href="#signup">Sign up</a>
-        </form>
-      </div>
-    `;
-    document.body.innerHTML = '<button class="login-button">Log in</button>';
-    window.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      text: () => Promise.resolve(modalMarkup),
-    });
-    const show = jest.fn();
-    window.bootstrap = {
-      Modal: { getOrCreateInstance: jest.fn().mockReturnValue({ show }) },
-    };
-    initializeLoginModal(document);
-
-    document.querySelector(".login-button").click();
-    await new Promise((resolve) => window.setTimeout(resolve, 0));
-
-    expect(window.fetch).toHaveBeenCalledWith(
-      "/supplementary-content/login-modal.html",
-    );
-    expect(show).toHaveBeenCalledTimes(1);
-    expect(document.querySelector("#loginModal form").dataset.loginInitialized).toBe(
-      "true",
-    );
-  });
 });

@@ -1,4 +1,5 @@
 import { validateLoginFields } from "./registration-validation.js";
+import { saveAuthSession } from "./auth-session.js";
 
 const LOGIN_ENDPOINT =
   "https://api.kinoxii.redberryinternship.ge/api/login";
@@ -12,7 +13,7 @@ export function initializeLoginForm(form, doc = document) {
   if (form.dataset.loginInitialized === "true") return;
   form.dataset.loginInitialized = "true";
 
-  const feedback = new Map();
+  const feedback = new Map(); //map function to store feedback elements for each field
   for (const fieldName of ["email", "password"]) {
     const field = form.elements.namedItem(fieldName);
     const wrapper = doc.createElement("div");
@@ -43,7 +44,7 @@ export function initializeLoginForm(form, doc = document) {
     };
   }
 
-  const touchedFields = new Set();
+  const touchedFields = new Set(); // tracks which fields have been interacted with 
   function updateField(fieldName, errors = validateLogin(readCredentials()).errors) {
     const item = feedback.get(fieldName);
     if (!item) return;
@@ -124,9 +125,20 @@ export function initializeLoginForm(form, doc = document) {
         throw new Error(`Login failed: ${response.status}`);
       }
 
+      const payload = await response.json();
+      const session = payload?.data;
+      if (
+        !session?.user ||
+        typeof session.token !== "string" ||
+        !session.token
+      ) {
+        throw new TypeError("Login response did not contain a valid session");
+      }
+      saveAuthSession(session, doc.defaultView.sessionStorage);
+
       doc.dispatchEvent(
         new doc.defaultView.CustomEvent("auth:login", {
-          detail: { email: credentials.email },
+          detail: { email: credentials.email, user: session.user },
         }),
       );
       const loginModal = form.closest("#loginModal");
@@ -142,8 +154,8 @@ export function initializeLoginForm(form, doc = document) {
     }
   });
 
-  const signupLink = form.querySelector(".login-signup-link");
-  if (signupLink) {
+  const signupLink = form.querySelector(".login-signup-link"); // Select the sign-up link within the login form
+  if (signupLink) { 
     signupLink.addEventListener("click", (event) => {
       event.preventDefault();
       const loginModal = form.closest("#loginModal");
@@ -159,48 +171,5 @@ export function initializeLoginForm(form, doc = document) {
       );
       doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).hide();
     });
-  }
-}
-
-export function initializeLoginModal(doc = document) {
-  const loginButton = doc.querySelector(".login-button");
-  if (!loginButton) return;
-
-  loginButton.addEventListener("click", async () => {
-    let loginModal = doc.querySelector("#loginModal");
-
-    if (!loginModal) {
-      const response = await doc.defaultView.fetch(
-        "/supplementary-content/login-modal.html",
-      );
-      if (!response.ok) {
-        throw new Error(`Failed to load login modal: ${response.status}`);
-      }
-
-      const modalDocument = new doc.defaultView.DOMParser().parseFromString(
-        await response.text(),
-        "text/html",
-      );
-      loginModal = modalDocument.querySelector("#loginModal");
-      if (!loginModal) {
-        throw new Error("Login modal markup was not found in the response");
-      }
-      doc.body.append(loginModal);
-    }
-
-    initializeLoginForm(loginModal.querySelector("form"), doc);
-    doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).show();
-  });
-}
-
-if (typeof document !== "undefined") {
-  if (document.querySelector(".login-button")) {
-    initializeLoginModal();
-  } else {
-    document.addEventListener(
-      "header:rendered",
-      () => initializeLoginModal(),
-      { once: true },
-    );
   }
 }

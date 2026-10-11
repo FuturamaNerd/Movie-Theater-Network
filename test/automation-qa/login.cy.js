@@ -36,7 +36,25 @@ describe("user login", () => {
     cy.intercept(
       "POST",
       "https://api.kinoxii.redberryinternship.ge/api/login",
-      { statusCode: 200, body: { message: "Login successful" } },
+      {
+        statusCode: 200,
+        body: {
+          data: {
+            user: {
+              id: 123,
+              username: "Elaine",
+              email: "Elaine@example.com",
+              avatar: null,
+              fullName: null,
+              mobileNumber: null,
+              dateOfBirth: null,
+              age: null,
+              profileComplete: false,
+            },
+            token: "test-token",
+          },
+        },
+      },
     ).as("login");
 
     cy.get("#loginEmail").type("Elaine@example.com");
