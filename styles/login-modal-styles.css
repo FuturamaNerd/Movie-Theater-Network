@@ -12,8 +12,9 @@
 
 .login-modal .modal-title {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.25;
+  font-size: var(--font-h3);
+  font-weight: 800;
+  line-height: 1.3;
 }
 
 .login-modal .btn-close {
@@ -27,7 +28,7 @@
 .login-subtitle {
   margin: 3px 0 0;
   color: var(--modal-muted);
-  font-size: 8px;
+  font-size: var(--font-body-small);
   line-height: 1.3;
 }
 
@@ -45,17 +46,17 @@
 
 .login-modal .form-label {
   margin: 0 0 5px;
-  font-size: 8px;
-  font-weight: 500;
-  line-height: 1.2;
+  font-size: var(--font-label-medium);
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .login-modal .form-control {
-  height: 27px;
-  min-height: 27px;
-  padding: 5px 10px;
-  font-size: 8px;
-  line-height: 1.2;
+  height: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: var(--font-body-medium);
+  line-height: 1.3;
 }
 
 .login-field.is-invalid .form-label {
@@ -93,14 +94,14 @@
 .login-validation-message:not([hidden]) {
   margin: 5px 0 0;
   color: #ec3013;
-  font-size: 8px;
-  line-height: 1.2;
+  font-size: var(--font-body-small);
+  line-height: 1.3;
 }
 
 .login-status:not([hidden]) {
   margin: 12px 0 0;
   color: #ec3013;
-  font-size: 9px;
+  font-size: var(--font-body-small);
   text-align: center;
 }
 
@@ -114,10 +115,11 @@
 .login-modal .login-submit {
   width: 100%;
   justify-self: stretch;
-  min-height: 27px;
-  padding: 5px 12px;
+  min-height: 44px;
+  padding: 8px 12px;
   color: #fff;
-  font-size: 9px;
+  font-size: var(--font-button);
+  font-weight: 800;
   background: #ec3013;
   border: 0;
   border-radius: 999px;
@@ -132,7 +134,7 @@
 .login-signup-prompt {
   margin: 0;
   color: var(--modal-muted);
-  font-size: 9px;
+  font-size: var(--font-body-small);
   line-height: 1.3;
   text-align: center;
 }
@@ -154,27 +156,27 @@
   }
 
   .login-modal .modal-title {
-    font-size: 18px;
+    font-size: var(--font-h3);
   }
 
   .login-subtitle,
   .login-modal .form-label,
   .login-modal .form-control,
   .login-validation-message:not([hidden]) {
-    font-size: 11px;
+    font-size: var(--font-body-medium);
   }
 
   .login-status:not([hidden]) {
-    font-size: 12px;
+    font-size: var(--font-body-small);
   }
 
   .login-modal .form-control {
-    height: 38px;
+    height: 44px;
   }
 
   .login-modal .login-submit {
-    min-height: 38px;
-    font-size: 12px;
+    min-height: 44px;
+    font-size: var(--font-button);
   }
 
   .login-signup-prompt {

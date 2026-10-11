@@ -1,5 +1,5 @@
 main {
-  padding: 28px 24px 48px;
+  padding: 96px 24px 48px;
 }
 main h1 {
   margin: 0 0 10px;
@@ -61,7 +61,7 @@ select {
   height: 44px;
   padding: 0 12px;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: 12px;
   outline: none;
   background: #202231;
   color: #f4f4f7;
@@ -87,7 +87,7 @@ input[readonly] {
   width: min(493px, 100%);
   margin: 12px 0 0;
   padding: 10px 12px;
-  border-radius: 7px;
+  border-radius: 12px;
   font-size: var(--font-body-small);
 }
 .profile-incomplete-banner {

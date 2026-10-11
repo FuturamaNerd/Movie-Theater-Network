@@ -16,7 +16,7 @@
   flex: 0 0 auto;
   align-items: center;
   color: #f7f7fa;
-  font-size: 8px;
+  font-size: var(--font-label-medium);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-decoration: none;
@@ -30,7 +30,7 @@
 .footer-copyright {
   flex: 0 0 auto;
   color: #858996;
-  font-size: 6px;
+  font-size: var(--font-body-small);
   white-space: nowrap;
 }
 
@@ -39,6 +39,4 @@
     padding: 0 16px;
   }
 }
-  display: flex;
-  justify-content: space-between;
 }

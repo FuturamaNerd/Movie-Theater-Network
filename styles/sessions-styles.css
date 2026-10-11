@@ -26,8 +26,9 @@ header {
 .sessions-heading h1 {
   margin: 0 0 5px;
   color: var(--text-primary);
-  font-size: 24px;
-  font-weight: 700;
+  font-size: var(--font-h1);
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .sessions-heading p,
@@ -67,8 +68,9 @@ header {
 
 .sessions-date-filter > label {
   color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: var(--font-label-small);
+  font-weight: 600;
+  letter-spacing: -0.06em;
   text-transform: uppercase;
 }
 
@@ -88,7 +90,8 @@ header {
 .filter-heading h2 {
   margin: 0;
   color: var(--text-primary);
-  font-size: 16px;
+  font-size: var(--font-h3);
+  font-weight: 800;
 }
 
 .filter-heading button {
@@ -96,7 +99,8 @@ header {
   border: 0;
   background: none;
   color: var(--reddish-helper);
-  font-size: 11px;
+  font-size: var(--font-button);
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -392,6 +396,7 @@ a.session-showtime:focus-visible {
   border-radius: 50%;
   background: var(--card-bg);
   color: var(--text-primary);
+  font-size: var(--font-body-small);
   cursor: pointer;
 }
 
