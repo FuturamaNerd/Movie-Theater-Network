@@ -1,5 +1,5 @@
 import { saveAuthSession } from "../../src/Auth/auth-session.js";
-import { initializeProtectedActions } from "../../src/interactivity/protected-actions.js";
+import { initializeProtectedActions } from "../../src/render-pages/protected-actions.js";
 
 describe("protected actions", () => {
   beforeEach(() => {

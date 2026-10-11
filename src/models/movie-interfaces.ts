@@ -3,9 +3,29 @@ export interface MovieWithSynopsisData extends MovieData {
 }
 
 export interface MovieDetailData extends MovieWithSynopsisData {
-  director: string[];
-  cast: string[];
+  director: string;
+  cast: string;
   availableDates: string[];
+}
+
+export interface MovieSession {
+  id: number;
+  startsAt: string;
+  date: string;
+  time: string;
+  timeBand: "morning" | "afternoon" | "evening";
+  price: number;
+  seatsLeft: number;
+  isSoldOut: boolean;
+  hall: { id: number; name: string };
+  venue: VenueData;
+  format: MovieFormat;
+  language: SessionLanguage;
+}
+
+export interface MovieVenueSessions {
+  venue: VenueData;
+  sessions: MovieSession[];
 }
 
 export interface AgeRating {

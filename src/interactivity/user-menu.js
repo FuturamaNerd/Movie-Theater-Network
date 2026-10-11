@@ -4,7 +4,7 @@ import {
 } from "../Auth/auth-session.js";
 import { logout, returnToHome } from "../Auth/logout.js";
 
-function getInitials(user) {
+function getInitials(user) { //return the initials of a user in place of avatar if not uploaded
   const name = user.fullName?.trim() || user.username?.trim() || user.email;
   const parts = name.split(/\s+/).filter(Boolean);
   if (parts.length > 1) {
@@ -111,7 +111,7 @@ function createUserMenu(doc, headerActions) {
   menu.append(trigger, panel);
   headerActions.append(menu);
 
-  function setAvatar(avatar, initials, user) {
+  function setAvatar(avatar, initials, user) { //set the avatar image or initials based on whether avatar is uploaded or not
     initials.textContent = getInitials(user);
     initials.hidden = false;
     avatar.classList.toggle(
@@ -138,18 +138,18 @@ function createUserMenu(doc, headerActions) {
     setOpen(panel.hidden);
   });
 
-  doc.addEventListener("click", (event) => {
+  doc.addEventListener("click", (event) => { // Close the menu if the user clicks outside of it
     if (!menu.contains(event.target)) setOpen(false);
   });
 
-  doc.addEventListener("keydown", (event) => {
+  doc.addEventListener("keydown", (event) => { // Close the menu if the user presses the Escape key
     if (event.key === "Escape" && !panel.hidden) {
       setOpen(false);
       trigger.focus();
     }
   });
 
-  logoutButton.addEventListener("click", async () => {
+  logoutButton.addEventListener("click", async () => { // Log out the user and return to the home page
     status.hidden = true;
     status.textContent = "";
     try {
@@ -192,7 +192,7 @@ export function initializeUserMenu(doc = document) {
   );
   const accountMenu = createUserMenu(doc, headerActions);
 
-  function renderSession() {
+  function renderSession() { // Update the user menu based on the current authentication session
     const session = getAuthSession(doc.defaultView.sessionStorage);
     for (const button of authButtons) button.hidden = Boolean(session);
     accountMenu.menu.hidden = !session;

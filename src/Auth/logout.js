@@ -45,7 +45,7 @@ export async function logout(doc = document) {
 
   let response = await requestLogout(doc, session.token);
   if (response.status === 401) {
-    // The token may have expired server-side; reauthenticate once, then retry the logout.
+    // The token may have expired server-side; reauthenticate and retry the logout.
     clearAuthSession(storage);
     await waitForLogin(doc);
 

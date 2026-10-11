@@ -252,7 +252,10 @@ function renderMovieGroups(doc, root, groups) {
     const heading = doc.createElement("div");
     heading.className = "session-movie-heading";
     const title = doc.createElement("h2");
-    title.textContent = movie.title;
+    const titleLink = doc.createElement("a");
+    titleLink.href = `/pages/movie-details.html?movie=${encodeURIComponent(movie.slug)}`;
+    titleLink.textContent = movie.title;
+    title.append(titleLink);
     const runtime = doc.createElement("p");
     runtime.textContent = `${movie.runtimeMinutes} min`;
     const rating = doc.createElement("span");

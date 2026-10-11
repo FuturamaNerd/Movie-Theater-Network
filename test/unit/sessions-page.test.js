@@ -3,7 +3,7 @@ import {
   buildSessionsQuery,
   initializeSessionsPage,
   readSessionFilters,
-} from "../../src/interactivity/sessions-page.js";
+} from "../../src/render-pages/sessions-page.js";
 
 const filterOptions = {
   venues: [
@@ -177,6 +177,9 @@ describe("sessions page", () => {
     expect(document.querySelector(".session-movie h2").textContent).toBe(
       "Sample Movie",
     );
+    expect(
+      document.querySelector(".session-movie h2 a").getAttribute("href"),
+    ).toBe("/pages/movie-details.html?movie=sample-movie");
     expect(document.querySelector(".session-showtime.is-sold-out")).not.toBeNull();
     expect(document.querySelector("#sessions-count").textContent).toBe(
       "Showing 27 sessions",
