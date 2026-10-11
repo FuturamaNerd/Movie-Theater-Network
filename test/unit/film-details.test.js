@@ -120,6 +120,7 @@ describe("film details page", () => {
   afterEach(() => {
     delete window.fetch;
     window.sessionStorage.clear();
+    window.localStorage.clear();
     window.history.replaceState({}, "", "/");
     document.body.innerHTML = "";
     jest.restoreAllMocks();
@@ -165,6 +166,14 @@ describe("film details page", () => {
     expect(document.querySelector("#movie-details-formats").textContent).toBe(
       "PANORAMA",
     );
+    const recentlyViewed = JSON.parse(
+      window.localStorage.getItem("recently-viewed-movies"),
+    );
+    expect(recentlyViewed[0]).toMatchObject({
+      slug: "buddy",
+      title: "Buddy",
+    });
+    expect(recentlyViewed[0].viewedAt).toBeTruthy();
   });
 
   it("shows seven dates and groups sessions with all documented showtime details", async () => {

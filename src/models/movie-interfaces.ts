@@ -8,6 +8,17 @@ export interface MovieDetailData extends MovieWithSynopsisData {
   availableDates: string[];
 }
 
+export interface RecentlyViewedMovie extends MovieData {
+  viewedAt: string;
+}
+
+export interface MovieNotificationResponse {
+  data: {
+    movieId: number;
+    subscribed: true;
+  };
+}
+
 export interface MovieSession {
   id: number;
   startsAt: string;

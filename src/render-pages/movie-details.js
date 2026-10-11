@@ -2,6 +2,7 @@ import {
   getAuthSession,
   restoreAuthSession,
 } from "../Auth/auth-session.js";
+import { recordRecentlyViewedMovie } from "../interactivity/recently-viewed.js";
 
 const API_BASE = "https://api.kinoxii.redberryinternship.ge/api";
 
@@ -234,6 +235,7 @@ export async function initializeMovieDetailsPage(
     ) {
       throw new TypeError("Film details response is missing required fields");
     }
+    recordRecentlyViewedMovie(movie, doc.defaultView.localStorage);
     renderMovie(doc, movie);
 
     const todayValue = localDate(today);

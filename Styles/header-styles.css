@@ -35,6 +35,7 @@ header {
 
   width: 285px;
   height: 30px;
+  margin: 0;
 }
 
 .header-search input {
@@ -82,6 +83,12 @@ header {
   color: var(--text-primary);
 
   cursor: pointer;
+}
+
+.header-search button img {
+  display: block;
+  width: 14px;
+  height: 14px;
 }
 .visually-hidden {
   position: absolute;

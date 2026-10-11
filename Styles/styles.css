@@ -461,6 +461,46 @@ body {
   margin-top: 6px;
 }
 
+.movie-card-notify {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--reddish-helper);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.movie-card-notify:hover {
+  filter: brightness(1.12);
+}
+
+.movie-card-notify:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.movie-card-notify img {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+.movie-notify-status {
+  margin-top: 5px;
+  color: var(--text-secondary);
+  font-size: 8px;
+  line-height: 1.2;
+}
+
 .movie-section-status {
   padding: 12px 0;
   color: var(--text-secondary);
