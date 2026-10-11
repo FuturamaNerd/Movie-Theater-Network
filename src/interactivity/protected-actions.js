@@ -7,6 +7,7 @@ export function initializeProtectedActions(doc = document) {
   doc.documentElement.dataset.protectedActionsInitialized = "true";
 
   let pendingAction;
+
   doc.addEventListener(
     "click",
     (event) => {
