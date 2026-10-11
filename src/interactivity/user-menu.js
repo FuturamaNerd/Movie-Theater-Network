@@ -1,5 +1,5 @@
 import { getAuthSession } from "../Auth/auth-session.js";
-import { logout } from "../Auth/logout.js";
+import { logout, returnToHome } from "../Auth/logout.js";
 
 function getInitials(user) {
   const name = user.fullName?.trim() || user.username?.trim() || user.email;
@@ -79,7 +79,7 @@ function createUserMenu(doc, headerActions) {
 
   const profileLink = doc.createElement("a");
   profileLink.className = "account-menu-link";
-  profileLink.href = "/profile";
+  profileLink.href = "/pages/my-proflie.html";
   profileLink.textContent = "My Profile";
 
   const ticketsLink = doc.createElement("a");
@@ -149,6 +149,7 @@ function createUserMenu(doc, headerActions) {
     try {
       await logout(doc);
       doc.dispatchEvent(new doc.defaultView.CustomEvent("auth:logout"));
+      returnToHome(doc);
     } catch (error) {
       if (!getAuthSession(doc.defaultView.sessionStorage)) {
         doc.dispatchEvent(new doc.defaultView.CustomEvent("auth:logout"));
@@ -215,6 +216,7 @@ export function initializeUserMenu(doc = document) {
 
   doc.addEventListener("auth:login", renderSession);
   doc.addEventListener("auth:logout", renderSession);
+  doc.addEventListener("auth:profile-updated", renderSession);
   renderSession();
 }
 

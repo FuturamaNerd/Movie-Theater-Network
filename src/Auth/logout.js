@@ -6,6 +6,12 @@ import {
 const LOGOUT_ENDPOINT =
   "https://api.kinoxii.redberryinternship.ge/api/logout";
 
+export function returnToHome(doc = document, navigate = (path) => {
+  doc.defaultView.location.assign(path);
+}) {
+  navigate("/");
+}
+
 function waitForLogin(doc) {
   return new Promise((resolve, reject) => {
     const loginButton = doc.querySelector(".login-button");

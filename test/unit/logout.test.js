@@ -1,4 +1,4 @@
-import { logout } from "../../src/Auth/logout.js";
+import { logout, returnToHome } from "../../src/Auth/logout.js";
 import { getAuthSession, saveAuthSession } from "../../src/Auth/auth-session.js";
 
 const LOGOUT_ENDPOINT = "https://api.kinoxii.redberryinternship.ge/api/logout";
@@ -95,5 +95,13 @@ describe("logout", () => {
     );
 
     expect(window.fetch).not.toHaveBeenCalled();
+  });
+
+  it("returns to the home page", () => {
+    const navigate = jest.fn();
+
+    returnToHome(document, navigate);
+
+    expect(navigate).toHaveBeenCalledWith("/");
   });
 });

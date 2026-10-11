@@ -73,6 +73,9 @@ describe("authenticated user menu", () => {
 
     expect(document.querySelector(".account-menu").hidden).toBe(false);
     expect(document.querySelector(".account-profile-notice").hidden).toBe(true);
+    expect(document.querySelector(".account-menu-link").getAttribute("href")).toBe(
+      "/pages/my-proflie.html",
+    );
 
     window.sessionStorage.clear();
     document.dispatchEvent(new Event("auth:logout"));
