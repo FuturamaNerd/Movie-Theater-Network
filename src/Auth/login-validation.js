@@ -1,5 +1,6 @@
 import { validateLoginFields } from "./registration-validation.js";
 import { saveAuthSession } from "./auth-session.js";
+import { switchModal } from "../interactivity/modal-navigation.js";
 
 const LOGIN_ENDPOINT =
   "https://api.kinoxii.redberryinternship.ge/api/login";
@@ -160,16 +161,11 @@ export function initializeLoginForm(form, doc = document) {
       event.preventDefault();
       const loginModal = form.closest("#loginModal");
       const signupButton = doc.querySelector(".sign-up-button");
-      if (!loginModal || !signupButton || !doc.defaultView.bootstrap?.Modal) {
+      if (!loginModal || !signupButton) {
         throw new Error("Unable to open the sign-up modal");
       }
 
-      loginModal.addEventListener(
-        "hidden.bs.modal",
-        () => signupButton.click(),
-        { once: true },
-      );
-      doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).hide();
+      switchModal(doc, loginModal, signupButton);
     });
   }
 }

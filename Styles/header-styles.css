@@ -123,8 +123,209 @@ header {
 
 .header-actions {
   margin-left: auto;
-
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.account-menu[hidden],
+.account-menu-panel[hidden],
+.account-profile-notice[hidden],
+.account-menu-status[hidden],
+.account-avatar-image[hidden],
+.account-avatar-initials[hidden],
+.auth-button[hidden] {
+  display: none;
+}
+
+.account-menu {
+  position: relative;
+}
+
+.account-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  border: 1px solid var(--whitish-tint);
+  border-radius: 999px;
+  background: rgba(7, 12, 28, 0.7);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.account-menu-trigger:hover,
+.account-menu-trigger:focus-visible {
+  background: var(--raised-bg);
+}
+
+.account-trigger-name {
+  max-width: 110px;
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-menu-chevron {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.account-avatar {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  overflow: visible;
+  border: 1px solid var(--whitish-tint);
+  border-radius: 50%;
+  background: var(--raised-bg);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.account-avatar-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.account-avatar.has-incomplete-profile::after {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--page-bg);
+  border-radius: 50%;
+  background: var(--orangish-helper);
+  content: "";
+}
+
+.account-menu-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  width: min(290px, calc(100vw - 32px));
+  padding: 10px;
+  border: 1px solid var(--whitish-tint);
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.account-menu-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 2px 10px;
+}
+
+.account-avatar-panel {
+  width: 36px;
+  height: 36px;
+}
+
+.account-identity-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11px;
+}
+
+.account-identity-copy strong,
+.account-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-email {
+  color: var(--text-secondary);
+  font-size: 9px;
+}
+
+.account-profile-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0 0 6px;
+  padding: 9px;
+  border: 1px solid var(--orangish-tint);
+  border-radius: 7px;
+  background: var(--raised-bg);
+  color: var(--text-secondary);
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.account-profile-notice strong {
+  color: var(--orangish-helper);
+  font-size: 10px;
+}
+
+.account-menu-link,
+.account-menu-logout {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 10px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.account-menu-link:hover,
+.account-menu-link:focus-visible,
+.account-menu-logout:hover,
+.account-menu-logout:focus-visible {
+  background: var(--whitish-tint);
+}
+
+.account-menu-logout {
+  margin: 5px -10px -10px;
+  padding-left: 17px;
+  border-top: 1px solid var(--whitish-tint);
+  border-radius: 0 0 12px 12px;
+  color: var(--reddish-helper);
+}
+
+.account-menu-status {
+  margin-top: 8px;
+  color: var(--reddish-helper);
+  font-size: 10px;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .header-search {
+    width: min(285px, 35vw);
+  }
+
+  .account-trigger-name {
+    display: none;
+  }
 }

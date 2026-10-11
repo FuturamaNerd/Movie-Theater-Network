@@ -163,6 +163,17 @@
   padding: 18px 0 0;
 }
 
+.signup-status:not(:empty) {
+  margin: 10px 0 0;
+  color: var(--modal-muted);
+  font-size: 9px;
+  text-align: center;
+}
+
+.signup-status:empty {
+  display: none;
+}
+
 .signup-modal .signup-submit {
   width: 100%;
   justify-self: stretch;

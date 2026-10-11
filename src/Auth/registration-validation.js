@@ -183,7 +183,7 @@ export function initializeRegistrationForm(form) {
     payload.append("email", registration.email);
     payload.append("password", registration.password);
     payload.append("password_confirmation", registration.confirmPassword);
-    payload.append("avatar", registration.avatar ?? "");
+    if (registration.avatar) payload.append("avatar", registration.avatar);
     const options = { method: "POST", body: payload };
 
     const status = form.querySelector("[role='status']");

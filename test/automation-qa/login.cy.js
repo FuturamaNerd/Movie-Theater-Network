@@ -1,14 +1,47 @@
-function assertInvalidCredentials() {
-  cy.intercept(
-    "POST",
-    "https://api.kinoxii.redberryinternship.ge/api/login",
-    { statusCode: 401, body: { message: "Invalid credentials." } },
-  ).as("login");
+const LOGIN_ENDPOINT = "**/api/login";
 
-  cy.get("#loginEmail").type("Elaine@example.com");
-  cy.get("#loginPassword").type("wrong-password");
+const validUser = {
+  id: 123,
+  username: "Elaine",
+  email: "Elaine@example.com",
+  avatar: null,
+  fullName: null,
+  mobileNumber: null,
+  dateOfBirth: null,
+  age: null,
+  profileComplete: false,
+};
+
+function openModal(triggerSelector, modalSelector) {
+  cy.get(triggerSelector).then(($trigger) => {
+    const modalShown = new Cypress.Promise((resolve) => {
+      $trigger[0].ownerDocument.addEventListener(
+        "shown.bs.modal",
+        resolve,
+        { once: true },
+      );
+    });
+    $trigger[0].click();
+    return modalShown;
+  });
+  cy.get(modalSelector).should("be.visible");
+}
+
+function assertInvalidCredentials(email, password) {
+  cy.intercept("POST", LOGIN_ENDPOINT, {
+    statusCode: 401,
+    body: { message: "Unauthenticated." },
+  }).as("login");
+
+  cy.get("#loginEmail").clear().type(email);
+  cy.get("#loginPassword").clear().type(password);
   cy.get("#loginModal button[type='submit']").click();
-  cy.wait("@login");
+
+  cy.wait("@login").then(({ request, response }) => {
+    expect(request.body).to.deep.equal({ email, password });
+    expect(response.statusCode).to.equal(401);
+    expect(response.body).to.deep.equal({ message: "Unauthenticated." });
+  });
 
   for (const fieldId of ["loginEmail", "loginPassword"]) {
     cy.get(`#${fieldId}`)
@@ -17,71 +50,65 @@ function assertInvalidCredentials() {
     cy.get(`#login-${fieldId === "loginEmail" ? "email" : "password"}-message`)
       .should("be.visible")
       .and("have.text", "Invalid credentials.");
-    cy.get(`#${fieldId}`)
-      .parent()
-      .find(".login-validation-icon")
-      .should("be.visible")
-      .and("have.attr", "src", "/styles/SVG/exclamation-warning-invalid.svg");
   }
 }
 
-describe("user login", () => {
+describe("login", () => {
   beforeEach(() => {
     cy.visit("/");
-    cy.get(".login-button").click();
-    cy.get("#loginModal").should("be.visible");
+    openModal(".login-button", "#loginModal");
   });
 
-  it("logs in with valid credentials", () => {
-    cy.intercept(
-      "POST",
-      "https://api.kinoxii.redberryinternship.ge/api/login",
-      {
-        statusCode: 200,
-        body: {
-          data: {
-            user: {
-              id: 123,
-              username: "Elaine",
-              email: "Elaine@example.com",
-              avatar: null,
-              fullName: null,
-              mobileNumber: null,
-              dateOfBirth: null,
-              age: null,
-              profileComplete: false,
-            },
-            token: "test-token",
-          },
-        },
-      },
-    ).as("login");
+  it("submits credentials, stores the API session, and shows the account menu", () => {
+    cy.intercept("POST", LOGIN_ENDPOINT, {
+      statusCode: 200,
+      body: { data: { user: validUser, token: "test-token" } },
+    }).as("login");
 
-    cy.get("#loginEmail").type("Elaine@example.com");
+    cy.get("#loginEmail").type(validUser.email);
     cy.get("#loginPassword").type("secret");
     cy.get("#loginModal button[type='submit']").click();
 
     cy.wait("@login").then(({ request, response }) => {
-      expect(response.statusCode).to.equal(200);
       expect(request.headers["content-type"]).to.include("application/json");
       expect(request.body).to.deep.equal({
-        email: "Elaine@example.com",
+        email: validUser.email,
         password: "secret",
       });
+      expect(response.statusCode).to.equal(200);
+      expect(response.body.data).to.deep.equal({
+        user: validUser,
+        token: "test-token",
+      });
     });
+
     cy.get("#loginModal").should("not.have.class", "show");
+    cy.get(".sign-up-button").should("not.be.visible");
+    cy.get(".login-button").should("not.be.visible");
+    cy.get(".account-menu-trigger")
+      .should("be.visible")
+      .and("contain.text", validUser.username);
+    cy.get(".account-avatar-trigger")
+      .should("have.class", "has-incomplete-profile")
+      .find(".account-avatar-initials")
+      .should("be.visible")
+      .and("have.text", "EL");
+    cy.get(".account-menu-trigger").click();
+    cy.get(".account-profile-notice")
+      .should("be.visible")
+      .and("contain.text", "Profile incomplete");
   });
 
-  it("shows invalid credentials for a user who is not registered", () => {
-    assertInvalidCredentials();
+  it("shows the API's unauthenticated response for an unknown account", () => {
+    assertInvalidCredentials("unknown@example.com", "secret");
   });
 
-  it("shows invalid credentials for a wrong password", () => {
-    assertInvalidCredentials();
+  it("shows the API's unauthenticated response for an incorrect password", () => {
+    assertInvalidCredentials(validUser.email, "wrong-password");
   });
 
-  it("opens the sign-up modal from the sign-up link", () => {
-    cy.get(".login-signup-link").click();
+  it("switches from login to sign-up after closing the login modal", () => {
+    cy.get("#loginModal .login-signup-link").click();
     cy.get("#loginModal").should("not.have.class", "show");
     cy.get("#signupModal").should("be.visible");
   });

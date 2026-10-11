@@ -174,7 +174,7 @@ describe("registration validation", () => {
       );
     });
 
-    it("submits the API multipart fields with an empty avatar when omitted", async () => {
+    it("omits the optional avatar from multipart fields when not provided", async () => {
       global.fetch = jest.fn().mockResolvedValue({
         ok: true,
       });
@@ -195,7 +195,6 @@ describe("registration validation", () => {
         ["email", "Elaine@example.com"],
         ["password", "secret"],
         ["password_confirmation", "secret"],
-        ["avatar", ""],
       ]);
     });
 

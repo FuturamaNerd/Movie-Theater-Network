@@ -1,4 +1,5 @@
 import { initializeRegistrationForm } from "../Auth/registration-validation.js";
+import { switchModal } from "./modal-navigation.js";
 
 export function initializeSignupModal(doc = document) {
   const signupButton = doc.querySelector(".sign-up-button");
@@ -27,6 +28,18 @@ export function initializeSignupModal(doc = document) {
     }
 
     initializeRegistrationForm(signupModal.querySelector("form"));
+    const loginLink = signupModal.querySelector(".signup-login-prompt a");
+    if (loginLink && loginLink.dataset.modalNavigationInitialized !== "true") {
+      loginLink.dataset.modalNavigationInitialized = "true";
+      loginLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        const loginButton = doc.querySelector(".login-button");
+        if (!loginButton) {
+          throw new Error("Unable to open the login modal");
+        }
+        switchModal(doc, signupModal, loginButton);
+      });
+    }
     doc.defaultView.bootstrap.Modal.getOrCreateInstance(signupModal).show();
   });
 }

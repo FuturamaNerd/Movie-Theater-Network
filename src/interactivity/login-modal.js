@@ -2,7 +2,10 @@ import { initializeLoginForm } from "../Auth/login-validation.js";
 
 export function initializeLoginModal(doc = document) {
   const loginButton = doc.querySelector(".login-button");
-  if (!loginButton) return;
+  if (!loginButton || loginButton.dataset.loginModalInitialized === "true") {
+    return;
+  }
+  loginButton.dataset.loginModalInitialized = "true";
 
   loginButton.addEventListener("click", async () => {
     let loginModal = doc.querySelector("#loginModal");
@@ -33,6 +36,7 @@ export function initializeLoginModal(doc = document) {
 
 if (typeof document !== "undefined") { // Check if running in a browser environment
   if (document.querySelector(".login-button")) {
+    initializeLoginModal();
   } else {
     document.addEventListener(
       "header:rendered",
