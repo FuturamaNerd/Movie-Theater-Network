@@ -1,27 +1,28 @@
 main {
-  padding: 7px 24px 48px;
+  padding: 28px 24px 48px;
 }
-h1 {
+main h1 {
   margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: 700;
+  font-size: var(--font-h1);
+  line-height: 1.2;
+  font-weight: 800;
 }
 .tabs {
   display: flex;
   align-items: center;
   gap: 20px;
-  height: 25px;
+  height: 42px;
   border-bottom: 1px solid #171b2a;
 }
 .tab {
-  height: 25px;
-  padding: 0 1px 8px;
+  height: 42px;
+  padding: 0 1px 12px;
   border: 0;
   border-bottom: 2px solid transparent;
   background: none;
   color: #a7a9b4;
-  font-size: 8px;
+  font-size: var(--font-button);
+  font-weight: 600;
   cursor: pointer;
 }
 .tab.active {
@@ -30,19 +31,19 @@ h1 {
 }
 .count {
   display: inline-flex;
-  width: 10px;
-  height: 10px;
+  width: 18px;
+  height: 18px;
   align-items: center;
   justify-content: center;
   margin-left: 4px;
   border-radius: 50%;
   background: #f3311a;
   color: white;
-  font-size: 7px;
+  font-size: var(--font-body-small);
 }
 .panel {
   width: min(493px, 100%);
-  padding-top: 23px;
+  padding-top: 28px;
 }
 .field {
   margin-bottom: 11px;
@@ -50,22 +51,21 @@ h1 {
 label {
   display: block;
   margin-bottom: 5px;
-  font-size: 7px;
-  line-height: 9px;
+  font-size: var(--font-label-medium);
+  font-weight: 600;
+  line-height: 1.3;
 }
 input,
 select {
   width: 100%;
-  height: 23px;
-  padding: 0 9px;
+  height: 44px;
+  padding: 0 12px;
   border: 1px solid transparent;
   border-radius: 7px;
   outline: none;
   background: #202231;
   color: #f4f4f7;
-  font:
-    7px Arial,
-    sans-serif;
+  font: var(--font-body-medium) "Archivo", sans-serif;
 }
 input:focus,
 select:focus {
@@ -80,7 +80,7 @@ input[readonly] {
 .hint {
   margin: 5px 0 0;
   color: #aaaab4;
-  font-size: 7px;
+  font-size: var(--font-body-small);
 }
 .profile-incomplete-banner,
 .profile-eligibility {
@@ -88,7 +88,7 @@ input[readonly] {
   margin: 12px 0 0;
   padding: 10px 12px;
   border-radius: 7px;
-  font-size: 10px;
+  font-size: var(--font-body-small);
 }
 .profile-incomplete-banner {
   background: #e27e041a;
@@ -101,7 +101,7 @@ input[readonly] {
 .profile-field-error {
   margin: 5px 0 0;
   color: #ff796e;
-  font-size: 8px;
+  font-size: var(--font-body-small);
 }
 input[aria-invalid="true"] {
   border-color: #f3311a;
@@ -135,13 +135,13 @@ select {
 .save {
   margin-top: 9px;
   padding: 0 13px;
-  height: 23px;
+  min-height: 40px;
   border: 0;
   border-radius: 14px;
   background: #f3311a;
   color: white;
-  font-size: 8px;
-  font-weight: 700;
+  font-size: var(--font-button);
+  font-weight: 800;
   cursor: pointer;
 }
 .save:hover {
@@ -151,17 +151,111 @@ select {
   display: inline-block;
   margin-left: 9px;
   color: #a9d5ad;
-  font-size: 8px;
+  font-size: var(--font-body-small);
 }
 .tickets {
-  display: none;
+  display: block;
   color: #b9bac4;
-  font-size: 10px;
+  font-size: var(--font-body-medium);
+}
+.tickets[hidden] {
+  display: none;
 }
 .tickets h2 {
   margin: 0 0 8px;
   color: white;
-  font-size: 12px;
+  font-size: var(--font-h2);
+  font-weight: 800;
+}
+.ticket-filter-tabs {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0;
+  border-bottom: 1px solid #343644;
+}
+.ticket-filter-tabs button {
+  width: auto;
+  height: auto;
+  padding: 8px 2px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #a7a9b4;
+  cursor: pointer;
+}
+.ticket-filter-tabs button[aria-selected="true"] {
+  border-bottom-color: #f3311a;
+  color: #fff;
+}
+.tickets-status {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #202231;
+}
+.tickets-status.is-error {
+  color: #ff8b80;
+}
+.ticket-orders {
+  display: grid;
+  gap: 12px;
+}
+.ticket-order-card {
+  padding: 14px;
+  border: 1px solid #343644;
+  border-radius: 16px;
+  background: #151722;
+}
+.ticket-order-card > header,
+.ticket-order-card > footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.ticket-order-card h3 {
+  margin: 0;
+  color: #fff;
+  font-size: var(--font-h3);
+  font-weight: 800;
+}
+.ticket-order-status {
+  color: #8dd9a0;
+  text-transform: capitalize;
+}
+.ticket-order-status.is-refunded {
+  color: #f0b45b;
+}
+.ticket-order-session,
+.ticket-order-seats {
+  color: #b9bac4;
+}
+.ticket-order-seats {
+  padding-left: 18px;
+}
+.ticket-order-card footer {
+  padding-top: 8px;
+  border-top: 1px solid #343644;
+}
+.ticket-order-card footer strong {
+  color: #fff;
+}
+.ticket-refund-button {
+  width: auto;
+  height: auto;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 18px;
+  background: #f3311a;
+  color: #fff;
+  cursor: pointer;
+}
+.ticket-refund-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.tickets-empty {
+  color: #b9bac4;
 }
 @media (max-width: 540px) {
   main {

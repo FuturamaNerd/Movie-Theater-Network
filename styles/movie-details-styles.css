@@ -50,7 +50,7 @@
   width: 190px;
   aspect-ratio: 2 / 3;
   flex: 0 0 auto;
-  border-radius: 10px;
+  border-radius: 16px;
   object-fit: cover;
   box-shadow: 0 12px 30px rgb(0 0 0 / 35%);
 }
@@ -69,14 +69,16 @@
 
 .movie-details-heading h1 {
   margin: 0 0 12px;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(var(--font-h1), 4vw, var(--font-display));
+  font-weight: 800;
 }
 
 .movie-details-synopsis {
   max-width: 640px;
   margin: 0 0 18px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  font-size: var(--font-body-large);
+  line-height: 1.3;
 }
 
 .movie-details-badges {
@@ -105,7 +107,8 @@
 .movie-details-screenings h2,
 .movie-details-facts h2 {
   margin: 0 0 18px;
-  font-size: 18px;
+  font-size: var(--font-h2);
+  font-weight: 800;
 }
 
 .movie-details-dates {
@@ -122,7 +125,7 @@
   place-content: center;
   gap: 3px;
   border: 1px solid var(--whitish-tint);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--card-bg);
   color: var(--text-primary);
   cursor: pointer;
@@ -153,7 +156,8 @@
 
 .movie-details-venue h3 {
   margin: 0 0 9px;
-  font-size: 13px;
+  font-size: var(--font-h3);
+  font-weight: 800;
 }
 
 .movie-details-showtime-list {
@@ -168,7 +172,7 @@
   gap: 5px;
   padding: 10px;
   border: 1px solid var(--whitish-tint);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--card-bg);
   color: var(--text-primary);
   text-decoration: none;
@@ -180,7 +184,7 @@
 
 .movie-details-showtime-format {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--font-body-small);
 }
 
 .movie-details-showtime-price {
@@ -201,8 +205,8 @@
   border-radius: 8px;
   background: var(--orangish-tint);
   color: #f4b35e;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: var(--font-body-small);
+  line-height: 1.3;
 }
 
 .movie-details-age-error:empty {
@@ -219,15 +223,16 @@
 .movie-details-facts dt {
   margin-top: 10px;
   color: var(--text-secondary);
-  font-size: 10px;
-  font-weight: 700;
+  font-size: var(--font-overline);
+  font-weight: 600;
+  letter-spacing: -0.06em;
   text-transform: uppercase;
 }
 
 .movie-details-facts dd {
   margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: var(--font-body-medium);
+  line-height: 1.3;
 }
 
 .movie-details-rating-copy {

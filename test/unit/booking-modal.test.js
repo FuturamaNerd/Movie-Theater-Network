@@ -161,6 +161,46 @@ describe("booking modal", () => {
     expect(modal.querySelector('[data-seat-code="G5"]').getAttribute("aria-hidden")).toBe("true");
   });
 
+  it("restores a live hold and the API-assigned ticket types", async () => {
+    window.sessionStorage.setItem("booking-hold:1476", "hold-uuid");
+    window.fetch.mockImplementation(async (url) => {
+      if (String(url).endsWith("/holds/hold-uuid")) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: {
+              holdId: "hold-uuid",
+              sessionId: 1476,
+              expiresAt: new Date(Date.now() + 8 * 60_000).toISOString(),
+              secondsRemaining: 480,
+              isLive: true,
+              subtotal: 10.5,
+              seats: [{
+                seatId: 10,
+                code: "G1",
+                ticketType: { slug: "student", name: "Student" },
+                price: 10.5,
+              }],
+            },
+          }),
+        };
+      }
+      return setupFetch(url);
+    });
+
+    await openBookingModal(document, session.id, movie);
+
+    const modal = document.querySelector(".booking-modal");
+    expect(modal.dataset.step).toBe("checkout");
+    expect(modal.querySelector(".booking-checkout-summary").textContent).toContain(
+      "Student",
+    );
+    expect(window.fetch.mock.calls.some(([url]) =>
+      String(url).endsWith("/holds/hold-uuid"),
+    )).toBe(true);
+  });
+
   it("limits selection and sends seat IDs and chosen ticket types to the hold endpoint", async () => {
     await openBookingModal(document, session.id, movie);
     const modal = document.querySelector(".booking-modal");

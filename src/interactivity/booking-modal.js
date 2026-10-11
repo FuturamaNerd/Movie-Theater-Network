@@ -2,8 +2,10 @@ import {
   getAuthSession,
   handleUnauthorizedResponse,
 } from "../Auth/auth-session.js";
+import { fetchHold } from "../API/tickets.js";
 
 const API_BASE = "https://api.kinoxii.redberryinternship.ge/api";
+const HOLD_STORAGE_KEY = "booking-hold";
 let bookingOptionsPromise;
 /** @typedef {import("../models/movie-interfaces").BookingFilterOptions} BookingFilterOptions */
 /** @typedef {import("../models/movie-interfaces").MovieData} MovieData */
@@ -499,6 +501,7 @@ export async function openBookingModal(doc, sessionId, movie) {
     if (!hold?.holdId || !getAuthSession(doc.defaultView.sessionStorage)) return;
     const releasingHold = hold;
     hold = null;
+    doc.defaultView.sessionStorage.removeItem(`${HOLD_STORAGE_KEY}:${sessionId}`);
     try {
       const { response } = await request(
         doc,
@@ -525,6 +528,10 @@ export async function openBookingModal(doc, sessionId, movie) {
 
   function setStep2(held) {
     hold = held;
+    doc.defaultView.sessionStorage.setItem(
+      `${HOLD_STORAGE_KEY}:${sessionId}`,
+      held.holdId,
+    );
     renderStep(modal, "checkout");
     modal.querySelector(".booking-checkout-step").hidden = false;
     modal.querySelector(".booking-seat-step").hidden = true;
@@ -551,6 +558,7 @@ export async function openBookingModal(doc, sessionId, movie) {
         doc.defaultView.clearInterval(timer);
         timer = undefined;
         hold = null;
+        doc.defaultView.sessionStorage.removeItem(`${HOLD_STORAGE_KEY}:${sessionId}`);
         selection.clear();
         renderStep(modal, "seats");
         showStatus(modal, "Your hold time expired. Please re-select your seats.");
@@ -568,6 +576,7 @@ export async function openBookingModal(doc, sessionId, movie) {
     if (timer) doc.defaultView.clearInterval(timer);
     timer = undefined;
     hold = null;
+    doc.defaultView.sessionStorage.removeItem(`${HOLD_STORAGE_KEY}:${sessionId}`);
     const lostCodes = Array.isArray(contested) ? contested : [];
     for (const code of lostCodes) {
       for (const section of seatMap.sections) {
@@ -619,6 +628,7 @@ export async function openBookingModal(doc, sessionId, movie) {
         if (timer) doc.defaultView.clearInterval(timer);
         timer = undefined;
         hold = null;
+        doc.defaultView.sessionStorage.removeItem(`${HOLD_STORAGE_KEY}:${sessionId}`);
         selection.clear();
         renderStep(modal, "seats");
         showStatus(modal, payload.message);
@@ -743,6 +753,7 @@ export async function openBookingModal(doc, sessionId, movie) {
       if (!(await handleBookingResponse(response, payload, "order"))) return;
       renderOrder(modal, payload?.data);
       hold = null;
+      doc.defaultView.sessionStorage.removeItem(`${HOLD_STORAGE_KEY}:${sessionId}`);
       if (timer) doc.defaultView.clearInterval(timer);
       timer = undefined;
     } catch (error) {
@@ -810,6 +821,41 @@ export async function openBookingModal(doc, sessionId, movie) {
     loading.hidden = true;
     modal.querySelector(".booking-seat-step").hidden = false;
     modal.querySelector(".booking-close").focus();
+
+    const persistedHoldId = doc.defaultView.sessionStorage.getItem(
+      `${HOLD_STORAGE_KEY}:${sessionId}`,
+    );
+    if (persistedHoldId) {
+      try {
+        const persistedHold = await fetchHold(persistedHoldId, doc);
+        if (
+          persistedHold.sessionId === Number(sessionId) &&
+          persistedHold.isLive &&
+          Date.parse(persistedHold.expiresAt) > Date.now()
+        ) {
+          selection.clear();
+          for (const seat of persistedHold.seats) {
+            selection.set(seat.seatId, {
+              seatId: seat.seatId,
+              ticketType: seat.ticketType.slug,
+            });
+          }
+          setStep2(persistedHold);
+        } else {
+          doc.defaultView.sessionStorage.removeItem(
+            `${HOLD_STORAGE_KEY}:${sessionId}`,
+          );
+        }
+      } catch (error) {
+        if (error.status === 404) {
+          doc.defaultView.sessionStorage.removeItem(
+            `${HOLD_STORAGE_KEY}:${sessionId}`,
+          );
+        } else {
+          throw error;
+        }
+      }
+    }
   } catch (error) {
     console.error("Unable to open the booking modal:", error);
     loading.textContent = "The booking details could not be loaded. Close this window and try again.";
