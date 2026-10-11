@@ -1,4 +1,4 @@
-import { validateRegistration } from "../../src/interactivity/registration-validation.js";
+import { validateRegistration } from "../..src/Auth/registration-validation.js";
 
 const availableAccounts = {
   existingUsernames: ["existing-user"],

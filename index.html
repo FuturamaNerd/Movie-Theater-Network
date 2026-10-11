@@ -14,6 +14,7 @@
 <!-- native styles -->
 <link rel="stylesheet" href="styles/styles.css" />
 <link rel="stylesheet" href="styles/header-styles.css" />
+<link rel="stylesheet" href="styles/footer-styles.css" />
 <link rel="stylesheet" href="styles/modal-styles.css" />
 <link rel="stylesheet" href="styles/sign-up-modal-styles.css" />
 
@@ -26,40 +27,6 @@
 />
   </head>
   <body>
-    <header>
-      <div class="header-brand-group">
-        <h2 class="brand header-brand">
-          Kino <span class="accent-text">XII</span>
-        </h2>
-
-        <a href="/sessions">Sessions</a>
-      </div>
-
-      <div class="header-actions">
-        <search class="header-search">
-          <label for="movie" class="visually-hidden">
-            Search films and live events
-          </label>
-
-          <input
-            type="search"
-            id="movie"
-            name="q"
-            placeholder="Search films and live events"
-          />
-
-          <button type="submit" aria-label="Search">
-            <!-- SVG -->
-          </button>
-        </search>
-
-        <button class="auth-button sign-up-button" type="button">
-          Sign Up
-        </button>
-
-        <button class="auth-button login-button" type="button">Log In</button>
-      </div>
-    </header>
     <main>
       <section class="hero-carousel" aria-label="Featured movies">
         <ul aria-live="polite"></ul>
@@ -103,13 +70,9 @@
         <p class="movie-section-status coming-soon-status" role="status" hidden></p>
       </section>
     </main>
-    <footer>
-      <p class="brand footer-brand">
-        Kino <span class="accent-text">XII</span>
-      </p>
-      <p class="copyright-statement">All rights reserved</p>
-    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="src/render-pages/add-header-start.js"></script>
+    <script type="module" src="src/render-pages/add-footer-end.js"></script>
     <script type="module" src="src/interactivity/carousel.js"></script>
     <script type="module" src="src/interactivity/movie-sections.js"></script>
     <script type="module" src="src/auth/signup-modal.js"></script>

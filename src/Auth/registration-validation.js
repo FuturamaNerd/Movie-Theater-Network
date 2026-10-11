@@ -19,7 +19,8 @@ export function validateRegistration(registration, availableAccounts = {}) {
   const existingUsernames = availableAccounts.existingUsernames ?? [];
   const existingEmails = availableAccounts.existingEmails ?? [];
 
-  if (
+  if ( //validate username: must be at least 3 characters and not already taken
+    typeof username !== "string" ||
     username.length < 3 ||
     existingUsernames.some(
       (existing) => existing.toLowerCase() === username.toLowerCase(),
@@ -28,22 +29,22 @@ export function validateRegistration(registration, availableAccounts = {}) {
     errors.username = true;
   }
 
-  if (
+  if (// email regex check
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-    existingEmails.some(
+    existingEmails.some( // check if email is already taken
       (existing) => existing.toLowerCase() === email.toLowerCase(),
     )
   ) {
     errors.email = true;
   }
 
-  if (
+  if (//check password: must be at least 3 characters
     typeof registration.password !== "string" ||
     registration.password.length < 3
   ) {
     errors.password = true;
   }
-  if (registration.confirmPassword !== registration.password) {
+  if (registration.confirmPassword !== registration.password) {// check if confirm password matches password
     errors.confirmPassword = true;
   }
   if (registration.avatar && !AVATAR_TYPES.includes(registration.avatar.type)) {

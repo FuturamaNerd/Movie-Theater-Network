@@ -555,9 +555,3 @@ body {
     font-size: 15px;
   }
 }
-
-footer { /*adjust footer to better match figma*/
- padding: 20px 21px;
- display: flex;
- justify-content: space-between
-}

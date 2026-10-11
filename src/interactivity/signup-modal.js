@@ -32,5 +32,13 @@ export function initializeSignupModal(doc = document) {
 }
 
 if (typeof document !== "undefined") {
-  initializeSignupModal();
+  if (document.querySelector(".sign-up-button")) {
+    initializeSignupModal();
+  } else {
+    document.addEventListener(
+      "header:rendered",
+      () => initializeSignupModal(),
+      { once: true },
+    );
+  }
 }
