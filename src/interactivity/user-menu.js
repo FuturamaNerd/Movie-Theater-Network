@@ -1,4 +1,7 @@
-import { getAuthSession } from "../Auth/auth-session.js";
+import {
+  getAuthSession,
+  restoreAuthSession,
+} from "../Auth/auth-session.js";
 import { logout, returnToHome } from "../Auth/logout.js";
 
 function getInitials(user) {
@@ -115,11 +118,14 @@ function createUserMenu(doc, headerActions) {
       "has-incomplete-profile",
       user.profileComplete === false,
     );
+    const image = avatar.querySelector(".account-avatar-image");
     if (user.avatar) {
-      const image = avatar.querySelector(".account-avatar-image");
       image.src = user.avatar;
       image.hidden = false;
       initials.hidden = true;
+    } else {
+      image.removeAttribute("src");
+      image.hidden = true;
     }
   }
 
@@ -217,7 +223,14 @@ export function initializeUserMenu(doc = document) {
   doc.addEventListener("auth:login", renderSession);
   doc.addEventListener("auth:logout", renderSession);
   doc.addEventListener("auth:profile-updated", renderSession);
+  doc.addEventListener("auth:session-restored", renderSession);
   renderSession();
+  restoreAuthSession(doc)
+    .then(renderSession)
+    .catch((error) => {
+      console.error(error);
+      renderSession();
+    });
 }
 
 if (typeof document !== "undefined") {

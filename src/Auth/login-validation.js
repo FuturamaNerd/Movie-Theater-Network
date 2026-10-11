@@ -45,7 +45,8 @@ export function initializeLoginForm(form, doc = document) {
     };
   }
 
-  const touchedFields = new Set(); // tracks which fields have been interacted with 
+  // Avoid showing validation feedback on untouched fields while keeping related errors current.
+  const touchedFields = new Set();
   function updateField(fieldName, errors = validateLogin(readCredentials()).errors) {
     const item = feedback.get(fieldName);
     if (!item) return;
@@ -147,6 +148,7 @@ export function initializeLoginForm(form, doc = document) {
       }
       saveAuthSession(session, doc.defaultView.sessionStorage);
 
+      // The protected-action handler listens for this event to resume the interrupted action.
       doc.dispatchEvent(
         new doc.defaultView.CustomEvent("auth:login", {
           detail: { email: credentials.email, user: session.user },
@@ -165,7 +167,7 @@ export function initializeLoginForm(form, doc = document) {
     }
   });
 
-  const signupLink = form.querySelector(".login-signup-link"); // Select the sign-up link within the login form
+  const signupLink = form.querySelector(".login-signup-link");
   if (signupLink) { 
     signupLink.addEventListener("click", (event) => {
       event.preventDefault();

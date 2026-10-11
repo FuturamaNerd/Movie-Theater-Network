@@ -20,6 +20,7 @@ function waitForLogin(doc) {
       return;
     }
 
+    // Retry logout only after login has stored a fresh authenticated session.
     doc.addEventListener("auth:login", resolve, { once: true });
     loginButton.click();
   });
@@ -44,6 +45,7 @@ export async function logout(doc = document) {
 
   let response = await requestLogout(doc, session.token);
   if (response.status === 401) {
+    // The token may have expired server-side; reauthenticate once, then retry the logout.
     clearAuthSession(storage);
     await waitForLogin(doc);
 

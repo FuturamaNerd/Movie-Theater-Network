@@ -2,6 +2,7 @@ import {
   clearAuthSession,
   getAuthSession,
   handleUnauthorizedResponse,
+  restoreAuthSession,
   saveAuthSession,
 } from "../../src/Auth/auth-session.js";
 
@@ -59,6 +60,63 @@ describe("authentication session", () => {
     expect(logoutEvent).toHaveBeenCalledTimes(1);
     expect(unauthorizedEvent).toHaveBeenCalledTimes(1);
     document.removeEventListener("auth:logout", logoutEvent);
+    document.removeEventListener("auth:unauthorized", unauthorizedEvent);
+  });
+
+  it("refreshes the current user from the API while preserving the token", async () => {
+    saveAuthSession(
+      { user: { id: 1, username: "old-name" }, token: "restore-token" },
+      window.sessionStorage,
+    );
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: {
+          id: 1,
+          username: "new-name",
+          email: "jane@example.com",
+          profileComplete: true,
+        },
+      }),
+    });
+
+    const restored = await restoreAuthSession(document);
+
+    expect(window.fetch).toHaveBeenCalledWith(
+      "https://api.kinoxii.redberryinternship.ge/api/me",
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer restore-token",
+        },
+      },
+    );
+    expect(restored).toEqual({
+      user: {
+        id: 1,
+        username: "new-name",
+        email: "jane@example.com",
+        profileComplete: true,
+      },
+      token: "restore-token",
+    });
+    expect(getAuthSession().user.profileComplete).toBe(true);
+  });
+
+  it("clears an expired stored token without opening the login flow", async () => {
+    saveAuthSession(
+      { user: { id: 1, username: "jane" }, token: "expired-token" },
+      window.sessionStorage,
+    );
+    window.fetch = jest.fn().mockResolvedValue({ ok: false, status: 401 });
+    const unauthorizedEvent = jest.fn();
+    document.addEventListener("auth:unauthorized", unauthorizedEvent);
+
+    await expect(restoreAuthSession(document)).resolves.toBeNull();
+
+    expect(getAuthSession()).toBeNull();
+    expect(unauthorizedEvent).not.toHaveBeenCalled();
     document.removeEventListener("auth:unauthorized", unauthorizedEvent);
   });
 });

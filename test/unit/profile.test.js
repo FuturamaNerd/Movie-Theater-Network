@@ -54,20 +54,24 @@ function createProfileForm() {
       </form>
     </main>
   `;
-  window.fetch = jest.fn().mockResolvedValue({
-    ok: true,
-    json: () =>
-      Promise.resolve({
-        data: {
-          venues: [
-            { id: 2, name: "Batumi Boulevard", city: "Batumi" },
-            { id: 1, name: "Galleria Tbilisi", city: "Tbilisi" },
-            { id: 3, name: "Rustaveli Palace", city: "Tbilisi" },
-            { id: 4, name: "Vake Park", city: "Tbilisi" },
-          ],
-        },
-      }),
-  });
+  window.fetch = jest.fn((url) =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: url.endsWith("/api/me")
+            ? initialUser
+            : {
+                venues: [
+                  { id: 2, name: "Batumi Boulevard", city: "Batumi" },
+                  { id: 1, name: "Galleria Tbilisi", city: "Tbilisi" },
+                  { id: 3, name: "Rustaveli Palace", city: "Tbilisi" },
+                  { id: 4, name: "Vake Park", city: "Tbilisi" },
+                ],
+              },
+        }),
+    }),
+  );
   saveAuthSession({ user: initialUser, token }, window.sessionStorage);
   const form = document.querySelector("#profile-form");
   initializeUserMenu(document);

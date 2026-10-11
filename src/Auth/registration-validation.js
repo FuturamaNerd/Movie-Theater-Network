@@ -11,6 +11,7 @@ const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 /**
  * @param {RegistrationFormData} registration
  * @param {{existingUsernames?: string[], existingEmails?: string[]}} [availableAccounts]
+ * Optional account lists provide immediate feedback; the API remains authoritative.
  */
 export function validateRegistration(registration, availableAccounts = {}) {
   const errors = {};
@@ -170,6 +171,7 @@ export function initializeRegistrationForm(form, doc = document) {
   const avatarField = form.elements.namedItem("avatar");
   if (avatarField && preview) {
     avatarField.addEventListener("change", () => {
+      // Release the previous object URL when the user selects another file.
       if (previewUrl) doc.defaultView.URL.revokeObjectURL(previewUrl);
       previewUrl = undefined;
 
@@ -224,6 +226,7 @@ export function initializeRegistrationForm(form, doc = document) {
         const payload = await response.json();
         const apiErrors = payload?.errors;
         if (apiErrors && typeof apiErrors === "object") {
+          // Translate API field names to the form's names before showing server errors.
           const fieldNames = {
             password_confirmation: "confirmPassword",
           };

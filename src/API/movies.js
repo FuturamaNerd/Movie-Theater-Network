@@ -8,6 +8,8 @@ const MOVIES_NOW_PLAYING_ENDPOINT =
 
 const MOVIES_COMING_SOON_ENDPOINT =
   "https://api.kinoxii.redberryinternship.ge/api/movies/coming-soon";
+
+// The movie endpoints may return either a raw list or the standard { data } envelope.
 export async function fetchFeaturedMovies() {
   const response = await fetch(FEATURED_MOVIES_ENDPOINT);
   handleUnauthorizedResponse(response);

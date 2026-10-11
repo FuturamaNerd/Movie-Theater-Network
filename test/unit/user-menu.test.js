@@ -4,6 +4,23 @@ import { initializeUserMenu } from "../../src/interactivity/user-menu.js";
 describe("authenticated user menu", () => {
   beforeEach(() => {
     window.sessionStorage.clear();
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: {
+          id: 1,
+          username: "jane1",
+          email: "jane@example.com",
+          avatar: null,
+          fullName: "Jane Doe",
+          mobileNumber: null,
+          dateOfBirth: null,
+          age: null,
+          profileComplete: false,
+        },
+      }),
+    });
     document.body.innerHTML = `
       <header>
         <div class="header-actions">
@@ -83,6 +100,35 @@ describe("authenticated user menu", () => {
     expect(document.querySelector(".account-menu").hidden).toBe(true);
     expect(document.querySelector(".sign-up-button").hidden).toBe(false);
     expect(document.querySelector(".login-button").hidden).toBe(false);
+  });
+
+  it("restores current profile data for a persisted sign-in on startup", async () => {
+    saveAuthSession({
+      user: {
+        id: 1,
+        username: "old-name",
+        email: "old@example.com",
+        profileComplete: true,
+      },
+      token: "restore-token",
+    });
+
+    initializeUserMenu(document);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(window.fetch).toHaveBeenCalledWith(
+      "https://api.kinoxii.redberryinternship.ge/api/me",
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: "Bearer restore-token",
+        }),
+      }),
+    );
+    expect(document.querySelector(".account-trigger-name").textContent).toBe(
+      "jane1",
+    );
+    expect(document.querySelector(".account-profile-notice").hidden).toBe(false);
   });
 
   it("opens the dropdown and closes it on Escape", () => {

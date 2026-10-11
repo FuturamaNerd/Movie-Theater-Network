@@ -37,6 +37,7 @@ function showProfileErrors(form, errors, doc) {
     if (!field) continue;
 
     const messages = Array.isArray(rawMessages) ? rawMessages : [rawMessages];
+    // Keep API wording intact so field-specific validation matches the contract.
     const copy = messages.filter((message) => typeof message === "string");
     if (copy.length === 0) continue;
 
@@ -52,6 +53,7 @@ function renderProfileState(form, user, doc) {
   const eligibility = doc.querySelector("#profile-eligibility");
   if (eligibility) {
     eligibility.hidden = typeof user.age !== "number";
+    // Age is supplied by the API; use it directly rather than recalculating it here.
     eligibility.textContent =
       typeof user.age !== "number"
         ? ""
@@ -84,6 +86,7 @@ function populateProfileForm(form, user) {
 }
 
 function clearProfileForm(form, doc) {
+  // Clear cached personal data as soon as auth is lost so it cannot remain visible.
   for (const fieldName of [...PROFILE_FIELDS, "email", "preferredVenueId"]) {
     const field = form.elements.namedItem(fieldName);
     if (field) field.value = "";
@@ -126,6 +129,7 @@ async function loadVenueOptions(form, user, doc, status) {
       throw new TypeError("Filter options response did not contain venues");
     }
 
+    // Filter options are shared with sessions; their venue IDs populate this profile field.
     const placeholder = venueField.options[0];
     venueField.replaceChildren(placeholder);
     for (const venue of payload.data.venues) {
@@ -175,6 +179,7 @@ export function initializeProfileForm(form, doc = document) {
 
     const payload = new FormData();
     payload.append("fullName", form.elements.namedItem("fullName").value);
+    // The API validates and stores mobile numbers as digits without embedded spaces.
     payload.append(
       "mobileNumber",
       form.elements.namedItem("mobileNumber").value.replace(/\s/g, ""),
@@ -184,6 +189,7 @@ export function initializeProfileForm(form, doc = document) {
       form.elements.namedItem("dateOfBirth").value,
     );
 
+    // Email is display-only and intentionally omitted from the profile update request.
     const venueId = form.elements.namedItem("preferredVenueId")?.value;
     if (venueId) payload.append("preferredVenueId", venueId);
     const avatar = form.elements.namedItem("avatar")?.files?.[0];
@@ -219,6 +225,7 @@ export function initializeProfileForm(form, doc = document) {
         throw new TypeError("Profile response did not contain a valid user");
       }
 
+      // Replace the cached user with the canonical profile returned by the API.
       saveAuthSession({ ...session, user }, doc.defaultView.sessionStorage);
       populateProfileForm(form, user);
       showProfileErrors(form, {}, doc);
