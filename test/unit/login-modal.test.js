@@ -40,4 +40,31 @@ describe("login modal", () => {
       document.querySelector("#loginModal form").dataset.loginInitialized,
     ).toBe("true");
   });
+
+  it("opens automatically after an API reports an expired session", async () => {
+    const modalMarkup = `
+      <div id="loginModal">
+        <form>
+          <div class="login-field"><input name="email" /></div>
+          <div class="login-field"><input name="password" /></div>
+        </form>
+      </div>
+    `;
+    document.body.innerHTML = '<button class="login-button">Log in</button>';
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () => Promise.resolve(modalMarkup),
+    });
+    const show = jest.fn();
+    window.bootstrap = {
+      Modal: { getOrCreateInstance: jest.fn().mockReturnValue({ show }) },
+    };
+    initializeLoginModal(document);
+
+    document.dispatchEvent(new Event("auth:unauthorized"));
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+
+    expect(show).toHaveBeenCalledTimes(1);
+    expect(document.querySelector("#loginModal")).not.toBeNull();
+  });
 });

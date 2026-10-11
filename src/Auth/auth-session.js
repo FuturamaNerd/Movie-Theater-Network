@@ -38,3 +38,12 @@ export function getAuthSession(storage = window.sessionStorage) {
 export function clearAuthSession(storage = window.sessionStorage) {
   storage.removeItem(AUTH_SESSION_KEY);
 }
+
+export function handleUnauthorizedResponse(response, doc = document) {
+  if (response.status !== 401) return response;
+
+  clearAuthSession(doc.defaultView.sessionStorage);
+  doc.dispatchEvent(new doc.defaultView.CustomEvent("auth:logout"));
+  doc.dispatchEvent(new doc.defaultView.CustomEvent("auth:unauthorized"));
+  return response;
+}

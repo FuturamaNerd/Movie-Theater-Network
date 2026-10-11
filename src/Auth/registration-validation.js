@@ -73,7 +73,7 @@ export function validateLoginFields(credentials) {
   return errors;
 }
 
-export function initializeRegistrationForm(form) {
+export function initializeRegistrationForm(form, doc = document) {
   if (form.dataset.registrationInitialized === "true") return;
   form.dataset.registrationInitialized = "true";
 
@@ -83,19 +83,19 @@ export function initializeRegistrationForm(form) {
   const feedback = new Map();
 
   for (const field of fields) {
-    const wrapper = document.createElement("div");
+    const wrapper = doc.createElement("div");
     wrapper.className = "signup-input-wrapper";
     field.before(wrapper);
     wrapper.append(field);
 
-    const icon = document.createElement("img");
+    const icon = doc.createElement("img");
     icon.className = "registration-validation-icon";
     icon.alt = "";
     icon.hidden = true;
     icon.setAttribute("aria-hidden", "true");
     wrapper.append(icon);
 
-    const message = document.createElement("p");
+    const message = doc.createElement("p");
     message.className = "registration-validation-message";
     message.id = `${field.name}-validation-message`;
     message.hidden = true;
@@ -104,6 +104,10 @@ export function initializeRegistrationForm(form) {
 
     feedback.set(field.name, { field, icon, message });
   }
+
+  const preview = form.querySelector(".avatar-preview");
+  let previewUrl;
+  const serverErrors = new Map();
 
   function readRegistration() {
     const avatar = form.elements.namedItem("avatar")?.files?.[0];
@@ -122,7 +126,7 @@ export function initializeRegistrationForm(form) {
     if (!item) return;
 
     const { field, icon, message } = item;
-    const error = validation.errors[fieldName];
+    const error = serverErrors.get(fieldName) || validation.errors[fieldName];
     const hasValue =
       field.type === "file" ? Boolean(field.files?.length) : field.value.length > 0;
 
@@ -155,11 +159,38 @@ export function initializeRegistrationForm(form) {
 
   for (const { field } of feedback.values()) {
     const updateCurrentField = () => {
+      serverErrors.delete(field.name);
       updateField(field.name);
       if (field.name === "password") updateField("confirmPassword");
     };
     field.addEventListener("input", updateCurrentField);
     field.addEventListener("change", updateCurrentField);
+  }
+
+  const avatarField = form.elements.namedItem("avatar");
+  if (avatarField && preview) {
+    avatarField.addEventListener("change", () => {
+      if (previewUrl) doc.defaultView.URL.revokeObjectURL(previewUrl);
+      previewUrl = undefined;
+
+      const avatar = avatarField.files?.[0];
+      const error = validateRegistration({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        ...(avatar ? { avatar } : {}),
+      }).errors.avatar;
+      if (!avatar || error) {
+        preview.hidden = true;
+        preview.removeAttribute("src");
+        return;
+      }
+
+      previewUrl = doc.defaultView.URL.createObjectURL(avatar);
+      preview.src = previewUrl;
+      preview.hidden = false;
+    });
   }
 
   form.addEventListener(
@@ -188,13 +219,40 @@ export function initializeRegistrationForm(form) {
 
     const status = form.querySelector("[role='status']");
     try {
-      const response = await fetch(REGISTRATION_ENDPOINT, options);
+      const response = await doc.defaultView.fetch(REGISTRATION_ENDPOINT, options);
       if (!response.ok) {
-        throw new Error(`Registration failed: ${response.status}`);
+        const payload = await response.json();
+        const apiErrors = payload?.errors;
+        if (apiErrors && typeof apiErrors === "object") {
+          const fieldNames = {
+            password_confirmation: "confirmPassword",
+          };
+          for (const [apiField, messages] of Object.entries(apiErrors)) {
+            const fieldName = fieldNames[apiField] || apiField;
+            const message = Array.isArray(messages) ? messages[0] : messages;
+            if (feedback.has(fieldName) && typeof message === "string") {
+              serverErrors.set(fieldName, message);
+              updateField(fieldName);
+            }
+          }
+        }
+        if (status) {
+          status.hidden = false;
+          status.textContent = `Registration failed: ${
+            payload?.message || response.statusText || response.status
+          }`;
+        }
+        return;
       }
-      if (status) status.textContent = "Registration successful.";
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Registration successful.";
+      }
     } catch (error) {
-      if (status) status.textContent = "Registration failed. Please try again.";
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Registration failed. Please try again.";
+      }
       console.error(error);
     }
   });

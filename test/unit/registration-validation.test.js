@@ -109,6 +109,8 @@ describe("registration validation", () => {
           <input name="password" />
           <input name="confirmPassword" />
           <input name="avatar" type="file" />
+          <img class="avatar-preview" alt="Avatar preview" hidden />
+          <p role="status" hidden></p>
         </form>
       `;
       form = document.querySelector("form");
@@ -117,6 +119,7 @@ describe("registration validation", () => {
 
     afterEach(() => {
       delete global.fetch;
+      jest.restoreAllMocks();
     });
 
     function enterValue(fieldName, value) {
@@ -223,6 +226,65 @@ describe("registration validation", () => {
         ["password_confirmation", "secret"],
         ["avatar", avatar],
       ]);
+    });
+
+    it("shows backend uniqueness errors on the corresponding field", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status: 422,
+        statusText: "Unprocessable Entity",
+        json: () =>
+          Promise.resolve({
+            message: "The given data was invalid.",
+            errors: { email: ["The email has already been taken."] },
+          }),
+      });
+      enterValue("username", "Elaine");
+      enterValue("email", "existing@example.com");
+      enterValue("password", "secret");
+      enterValue("confirmPassword", "secret");
+
+      form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+
+      expect(form.querySelector("#email-validation-message").textContent).toBe(
+        "The email has already been taken.",
+      );
+      expect(form.elements.namedItem("email").getAttribute("aria-invalid")).toBe(
+        "true",
+      );
+      expect(form.querySelector("[role='status']").textContent).toContain(
+        "Registration failed",
+      );
+    });
+
+    it("previews a selected supported avatar image", () => {
+      Object.defineProperty(window.URL, "createObjectURL", {
+        configurable: true,
+        value: jest.fn().mockReturnValue("blob:avatar-preview"),
+      });
+      Object.defineProperty(window.URL, "revokeObjectURL", {
+        configurable: true,
+        value: jest.fn(),
+      });
+      const createObjectURL = jest
+        .spyOn(window.URL, "createObjectURL")
+        .mockReturnValue("blob:avatar-preview");
+      jest.spyOn(window.URL, "revokeObjectURL").mockImplementation(() => {});
+      const avatarField = form.elements.namedItem("avatar");
+      const avatar = new File(["image"], "avatar.png", { type: "image/png" });
+      Object.defineProperty(avatarField, "files", {
+        configurable: true,
+        value: [avatar],
+      });
+
+      avatarField.dispatchEvent(new Event("change", { bubbles: true }));
+
+      expect(createObjectURL).toHaveBeenCalledWith(avatar);
+      expect(form.querySelector(".avatar-preview").hidden).toBe(false);
+      expect(form.querySelector(".avatar-preview").src).toBe(
+        "blob:avatar-preview",
+      );
     });
   });
 });

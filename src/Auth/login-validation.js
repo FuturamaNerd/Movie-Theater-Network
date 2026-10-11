@@ -109,6 +109,11 @@ export function initializeLoginForm(form, doc = document) {
       });
 
       if (response.status === 401 || response.status === 422) {
+        const payload = await response.json();
+        const apiMessage =
+          typeof payload?.message === "string"
+            ? payload.message
+            : "Invalid credentials.";
         for (const fieldName of feedback.keys()) {
           const item = feedback.get(fieldName);
           item.field.classList.remove("registration-valid");
@@ -117,8 +122,13 @@ export function initializeLoginForm(form, doc = document) {
           item.field.setAttribute("aria-invalid", "true");
           item.icon.src = "/styles/SVG/exclamation-warning-invalid.svg";
           item.icon.hidden = false;
-          item.message.textContent = "Invalid credentials.";
+          item.message.textContent =
+            payload?.errors?.[fieldName]?.[0] || "Invalid credentials.";
           item.message.hidden = false;
+        }
+        if (status) {
+          status.hidden = false;
+          status.textContent = apiMessage;
         }
         return;
       }

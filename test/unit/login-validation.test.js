@@ -59,7 +59,11 @@ describe("login validation", () => {
     async () => {
       const form = createLoginForm();
       enterCredentials(form);
-      window.fetch = jest.fn().mockResolvedValue({ status: 401, ok: false });
+      window.fetch = jest.fn().mockResolvedValue({
+        status: 401,
+        ok: false,
+        json: () => Promise.resolve({ message: "Unauthenticated." }),
+      });
 
       form.dispatchEvent(
         new Event("submit", { bubbles: true, cancelable: true }),
@@ -101,6 +105,31 @@ describe("login validation", () => {
         "registration-invalid",
       ),
     ).toBe(false);
+  });
+
+  it("shows the API error message and keeps the entered email after failure", async () => {
+    const form = createLoginForm();
+    enterCredentials(form, "kept@example.com", "secret");
+    window.fetch = jest.fn().mockResolvedValue({
+      status: 422,
+      ok: false,
+      json: () =>
+        Promise.resolve({
+          message: "The supplied credentials are invalid.",
+          errors: { email: ["This email was not found."] },
+        }),
+    });
+
+    form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+
+    expect(form.elements.namedItem("email").value).toBe("kept@example.com");
+    expect(form.querySelector("[role='status']").textContent).toBe(
+      "The supplied credentials are invalid.",
+    );
+    expect(form.querySelector("#login-email-message").textContent).toBe(
+      "This email was not found.",
+    );
   });
 
   it("posts valid credentials and announces successful login", async () => {

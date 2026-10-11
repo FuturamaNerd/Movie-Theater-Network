@@ -1,3 +1,5 @@
+import { handleUnauthorizedResponse } from "../Auth/auth-session.js";
+
 const FEATURED_MOVIES_ENDPOINT =
   "https://api.kinoxii.redberryinternship.ge/api/movies/featured";
 
@@ -8,6 +10,7 @@ const MOVIES_COMING_SOON_ENDPOINT =
   "https://api.kinoxii.redberryinternship.ge/api/movies/coming-soon";
 export async function fetchFeaturedMovies() {
   const response = await fetch(FEATURED_MOVIES_ENDPOINT);
+  handleUnauthorizedResponse(response);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch featured movies: ${response.status}`);
@@ -30,6 +33,7 @@ export const fetchMovies = fetchFeaturedMovies;
 /** @returns {Promise<import("../models/movie-interfaces").MovieData[]>} */
 export async function fetchNowPlayingMovies() {
   const response = await fetch(MOVIES_NOW_PLAYING_ENDPOINT);
+  handleUnauthorizedResponse(response);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch now playing movies: ${response.status}`);
@@ -48,6 +52,7 @@ export async function fetchNowPlayingMovies() {
 }
 export async function fetchComingSoonMovies() {
   const response = await fetch(MOVIES_COMING_SOON_ENDPOINT);
+  handleUnauthorizedResponse(response);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch coming soon movies: ${response.status}`);

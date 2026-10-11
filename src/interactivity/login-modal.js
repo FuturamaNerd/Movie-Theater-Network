@@ -7,7 +7,7 @@ export function initializeLoginModal(doc = document) {
   }
   loginButton.dataset.loginModalInitialized = "true";
 
-  loginButton.addEventListener("click", async () => {
+  async function showLoginModal() {
     let loginModal = doc.querySelector("#loginModal");
 
     if (!loginModal) {
@@ -31,7 +31,13 @@ export function initializeLoginModal(doc = document) {
 
     initializeLoginForm(loginModal.querySelector("form"), doc);
     doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).show();
-  });
+  }
+
+  loginButton.addEventListener("click", showLoginModal);
+  if (doc.documentElement.dataset.loginModalUnauthorizedListener !== "true") {
+    doc.documentElement.dataset.loginModalUnauthorizedListener = "true";
+    doc.addEventListener("auth:unauthorized", showLoginModal);
+  }
 }
 
 if (typeof document !== "undefined") { // Check if running in a browser environment

@@ -27,7 +27,7 @@ export function initializeSignupModal(doc = document) {
       doc.body.append(signupModal);
     }
 
-    initializeRegistrationForm(signupModal.querySelector("form"));
+    initializeRegistrationForm(signupModal.querySelector("form"), doc);
     const loginLink = signupModal.querySelector(".signup-login-prompt a");
     if (loginLink && loginLink.dataset.modalNavigationInitialized !== "true") {
       loginLink.dataset.modalNavigationInitialized = "true";
