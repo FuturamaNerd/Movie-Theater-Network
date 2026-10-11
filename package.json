@@ -1,0 +1,17 @@
+{
+  "name": "movie-theater-network",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "jest",
+    "test:e2e": "cypress run"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.0.7",
+    "@babel/preset-env": "^8.0.7",
+    "babel-jest": "^30.5.2",
+    "cypress": "^14.5.4",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2"
+  }
+}

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Film details | Kino XII</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="stylesheet" href="../styles/header-styles.css" />
+    <link rel="stylesheet" href="../styles/footer-styles.css" />
+    <link rel="stylesheet" href="../styles/movie-details-styles.css" />
+    <link rel="stylesheet" href="../styles/modal-styles.css" />
+    <link rel="stylesheet" href="../styles/sign-up-modal-styles.css" />
+    <link rel="stylesheet" href="../styles/login-modal-styles.css" />
+    <link rel="stylesheet" href="../styles/booking-modal-styles.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+    <main class="movie-details-page" id="movie-details-page">
+      <p class="movie-details-status" id="movie-details-status" role="status" hidden></p>
+      <section class="movie-details-hero" id="movie-details-hero" hidden aria-labelledby="movie-details-title">
+        <img class="movie-details-backdrop" id="movie-details-backdrop" alt="" />
+        <div class="movie-details-hero-content">
+          <img class="movie-details-poster" id="movie-details-poster" alt="" />
+          <div class="movie-details-heading">
+            <p class="movie-details-kicker">Now showing</p>
+            <h1 class="type-display" id="movie-details-title"></h1>
+            <p class="movie-details-synopsis" id="movie-details-synopsis"></p>
+            <div class="movie-details-badges">
+              <span id="movie-details-rating"></span>
+              <span id="movie-details-runtime"></span>
+              <span id="movie-details-formats"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="movie-details-content" id="movie-details-content" hidden>
+        <section class="movie-details-screenings" aria-labelledby="showtimes-heading">
+          <h2 class="type-h2" id="showtimes-heading">Sessions</h2>
+          <div class="movie-details-dates" id="movie-details-dates" aria-label="Available dates"></div>
+          <p class="movie-details-age-error" id="movie-details-age-error" role="alert" hidden></p>
+          <div class="movie-details-venue-list" id="movie-details-venue-list" aria-live="polite"></div>
+          <p class="movie-details-empty" id="movie-details-empty" hidden>No showtimes available for this date.</p>
+        </section>
+
+        <aside class="movie-details-facts" aria-labelledby="movie-facts-heading">
+          <h2 class="type-h2" id="movie-facts-heading">Details</h2>
+          <dl>
+            <dt>Director</dt><dd id="movie-details-director"></dd>
+            <dt>Cast</dt><dd id="movie-details-cast"></dd>
+            <dt>Genres</dt><dd id="movie-details-genres"></dd>
+            <dt>Release date</dt><dd id="movie-details-release"></dd>
+            <dt>Duration</dt><dd id="movie-details-duration"></dd>
+          </dl>
+          <p class="movie-details-rating-copy" id="movie-details-rating-copy"></p>
+        </aside>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../src/render-pages/add-header-start.js"></script>
+    <script type="module" src="../src/render-pages/add-footer-end.js"></script>
+    <script type="module" src="../src/interactivity/search.js"></script>
+    <script type="module" src="../src/interactivity/signup-modal.js"></script>
+    <script type="module" src="../src/interactivity/login-modal.js"></script>
+    <script type="module" src="../src/interactivity/user-menu.js"></script>
+    <script type="module" src="../src/render-pages/protected-actions.js"></script>
+    <script type="module" src="../src/render-pages/movie-details.js"></script>
+  </body>
+</html>

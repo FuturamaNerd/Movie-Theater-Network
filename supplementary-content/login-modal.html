@@ -1,0 +1,65 @@
+<div
+  class="modal fade theater-modal login-modal"
+  id="loginModal"
+  tabindex="-1"
+  aria-labelledby="loginModalLabel"
+  aria-hidden="true"
+  role="dialog"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h1 class="modal-title" id="loginModalLabel">Log in</h1>
+          <p class="login-subtitle">Welcome back to Kino XII</p>
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <form novalidate>
+        <div class="modal-body">
+          <div class="login-field">
+            <label class="form-label" for="loginEmail">Email</label>
+            <input
+              class="form-control"
+              type="email"
+              id="loginEmail"
+              name="email"
+              placeholder="example@gmail.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+
+          <div class="login-field">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input
+              class="form-control"
+              type="password"
+              id="loginPassword"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              minlength="3"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer login-footer">
+          <button class="btn login-submit" type="submit">Log in</button>
+          <p class="login-signup-prompt">
+            Don't have an account?
+            <a class="login-signup-link" href="#signup">Sign up</a>
+          </p>
+        </div>
+        <p class="login-status" role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+  </div>
+</div>

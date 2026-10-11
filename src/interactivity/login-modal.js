@@ -1,0 +1,53 @@
+import { initializeLoginForm } from "../Auth/login-validation.js";
+
+export function initializeLoginModal(doc = document) {
+  const loginButton = doc.querySelector(".login-button");
+  if (!loginButton || loginButton.dataset.loginModalInitialized === "true") {
+    return;
+  }
+  loginButton.dataset.loginModalInitialized = "true";
+
+  async function showLoginModal() {
+    let loginModal = doc.querySelector("#loginModal");
+
+    if (!loginModal) {
+      const response = await doc.defaultView.fetch(
+        "/supplementary-content/login-modal.html",
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to load login modal: ${response.status}`);
+      }
+
+      const modalDocument = new doc.defaultView.DOMParser().parseFromString(
+        await response.text(),
+        "text/html",
+      );
+      loginModal = modalDocument.querySelector("#loginModal");
+      if (!loginModal) {
+        throw new Error("Login modal markup was not found in the response");
+      }
+      doc.body.append(loginModal);
+    }
+
+    initializeLoginForm(loginModal.querySelector("form"), doc);
+    doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).show();
+  }
+
+  loginButton.addEventListener("click", showLoginModal);
+  if (doc.documentElement.dataset.loginModalUnauthorizedListener !== "true") {
+    doc.documentElement.dataset.loginModalUnauthorizedListener = "true";
+    doc.addEventListener("auth:unauthorized", showLoginModal);
+  }
+}
+
+if (typeof document !== "undefined") { // Check if running in a browser environment
+  if (document.querySelector(".login-button")) {
+    initializeLoginModal();
+  } else {
+    document.addEventListener(
+      "header:rendered",
+      () => initializeLoginModal(),
+      { once: true },
+    );
+  }
+}

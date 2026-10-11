@@ -1,0 +1,61 @@
+.movie-catalogue {
+  min-height: calc(100vh - 120px);
+  padding: 104px 44px 48px;
+}
+
+.movie-catalogue h1 {
+  margin: 0 0 24px;
+  font-size: var(--font-h1);
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.movie-catalogue-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+.movie-catalogue-list .now-playing-card {
+  width: 100%;
+  max-width: 220px;
+}
+
+.movie-catalogue-list .coming-soon-card {
+  width: 100%;
+  max-width: none;
+}
+
+.movie-catalogue.is-coming-soon .movie-catalogue-list {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+
+.movie-catalogue.is-coming-soon .coming-soon-card {
+  min-width: 0;
+}
+
+.movie-catalogue.is-coming-soon .coming-soon-card .movie-card-poster {
+  width: min(48%, 155px);
+  flex-basis: min(48%, 155px);
+}
+
+.movie-catalogue.is-coming-soon .coming-soon-card .movie-card-content {
+  min-width: 0;
+}
+
+#movie-catalogue-status {
+  margin: 12px 0;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .movie-catalogue {
+    padding: 88px 16px 32px;
+  }
+
+  .movie-catalogue-list {
+    grid-template-columns: 1fr;
+  }
+}

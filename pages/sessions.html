@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sessions | Kino XII</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="stylesheet" href="../styles/header-styles.css" />
+    <link rel="stylesheet" href="../styles/footer-styles.css" />
+    <link rel="stylesheet" href="../styles/sessions-styles.css" />
+    <link rel="stylesheet" href="../styles/modal-styles.css" />
+    <link rel="stylesheet" href="../styles/sign-up-modal-styles.css" />
+    <link rel="stylesheet" href="../styles/login-modal-styles.css" />
+    <link rel="stylesheet" href="../styles/booking-modal-styles.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+    <main class="sessions-page" id="sessions-page">
+      <div class="sessions-heading">
+        <div>
+          <h1 class="type-h1">Sessions</h1>
+          <p id="sessions-count" aria-live="polite">Showing sessions</p>
+        </div>
+      </div>
+
+      <div class="sessions-layout">
+        <aside class="sessions-filters" aria-label="Filter sessions">
+          <div class="filter-heading">
+            <h2 class="type-h3">Filters</h2>
+            <button id="clear-session-filters" type="button">Clear All Filters</button>
+          </div>
+          <div class="sessions-date-filter">
+            <label for="sessions-date">Date</label>
+            <input id="sessions-date" name="date" type="date" />
+            <div
+              class="sessions-date-strip"
+              id="sessions-date-strip"
+              aria-label="Choose a date"
+            ></div>
+          </div>
+          <div id="session-filter-groups" class="session-filter-groups">
+            <p class="filter-loading">Loading filters…</p>
+          </div>
+          <div class="filter-footer">
+            <p id="active-filter-count" aria-live="polite">0 filters active</p>
+          </div>
+        </aside>
+
+        <section class="sessions-results" aria-label="Matching sessions">
+          <div class="sessions-toolbar">
+            <label class="sessions-sort">
+              <span>Sort</span>
+              <select id="sessions-sort" name="sort"></select>
+            </label>
+          </div>
+
+          <p class="sessions-status" id="sessions-status" role="status" hidden></p>
+          <div class="session-movie-list" id="session-movie-list" aria-live="polite"></div>
+          <nav class="sessions-pagination" id="sessions-pagination" aria-label="Sessions pages" hidden>
+            <span id="sessions-page-summary"></span>
+          </nav>
+        </section>
+      </div>
+    </main>
+    <div id="site-footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../src/render-pages/add-header-start.js"></script>
+    <script type="module" src="../src/render-pages/add-footer-end.js"></script>
+    <script type="module" src="../src/interactivity/search.js"></script>
+    <script type="module" src="../src/interactivity/signup-modal.js"></script>
+    <script type="module" src="../src/interactivity/login-modal.js"></script>
+    <script type="module" src="../src/interactivity/user-menu.js"></script>
+    <script type="module" src="../src/render-pages/protected-actions.js"></script>
+    <script type="module" src="../src/render-pages/sessions-page.js"></script>
+  </body>
+</html>

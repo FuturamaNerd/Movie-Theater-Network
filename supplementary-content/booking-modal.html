@@ -1,0 +1,76 @@
+<div class="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-title" data-step="seats">
+  <div class="booking-modal-panel">
+    <header class="booking-header">
+      <div>
+        <h2 id="booking-title" class="booking-title"></h2>
+        <p class="booking-session-meta"></p>
+      </div>
+      <div class="booking-header-actions">
+        <p class="booking-countdown" hidden></p>
+        <button class="booking-close" type="button" aria-label="Close booking">&times;</button>
+      </div>
+    </header>
+    <nav class="booking-steps" aria-label="Purchase steps">
+      <span class="booking-step-indicator is-active" data-step-indicator="seats">1. Seats</span>
+      <span class="booking-step-indicator" data-step-indicator="checkout">2. Checkout</span>
+    </nav>
+    <p class="booking-status" role="status" aria-live="polite" hidden></p>
+    <p class="booking-loading">Loading the hall map…</p>
+    <section class="booking-seat-step" data-step-panel="seats" hidden>
+      <div class="booking-seat-layout">
+        <div class="booking-map-column">
+          <div class="booking-map"></div>
+          <ul class="booking-legend" aria-label="Seat status legend">
+            <li><span class="booking-legend-swatch is-available"></span>Available</li>
+            <li><span class="booking-legend-swatch is-selected"></span>Selected</li>
+            <li><span class="booking-legend-swatch is-sold"></span>Sold</li>
+            <li><span class="booking-legend-swatch is-held"></span>Held by another user</li>
+          </ul>
+        </div>
+        <aside class="booking-summary">
+          <h3>Your seats <span class="booking-seat-cap"></span></h3>
+          <p class="booking-seat-hint">Pick up to <span class="booking-seat-cap-copy"></span> seats from the map.</p>
+          <div class="booking-seat-summary"></div>
+          <div class="booking-subtotal"><span>Subtotal</span><strong></strong></div>
+          <button class="booking-next" type="button" disabled>Next: Checkout</button>
+        </aside>
+      </div>
+    </section>
+    <section class="booking-checkout-step" data-step-panel="checkout" hidden>
+      <div class="booking-checkout-layout">
+        <div>
+          <h3>Reservation <span class="booking-checkout-countdown"></span></h3>
+          <div class="booking-checkout-summary"></div>
+        </div>
+        <form class="booking-payment-form" novalidate>
+          <h3>Buyer and payment details</h3>
+          <label>Full Name<input name="fullName" autocomplete="name" required /></label>
+          <p class="booking-field-error" data-error-for="fullName" hidden></p>
+          <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+          <p class="booking-field-error" data-error-for="email" hidden></p>
+          <label>Mobile Number<input name="mobileNumber" type="tel" autocomplete="tel" required /></label>
+          <p class="booking-field-error" data-error-for="mobileNumber" hidden></p>
+          <label>Card Number<input id="booking-card-number" name="cardNumber" inputmode="numeric" autocomplete="cc-number" required /></label>
+          <p class="booking-field-error" data-error-for="cardNumber" hidden></p>
+          <div class="booking-payment-row">
+            <label>Expiry<input id="booking-expiry" name="expiry" placeholder="MM/YY" autocomplete="cc-exp" required /></label>
+            <label>CVV<input id="booking-cvv" name="cvv" inputmode="numeric" autocomplete="cc-csc" required /></label>
+          </div>
+          <p class="booking-field-error" data-error-for="expiry" hidden></p>
+          <p class="booking-field-error" data-error-for="cvv" hidden></p>
+          <button class="booking-pay" type="submit">Pay &amp; Complete Order</button>
+        </form>
+      </div>
+      <div class="booking-checkout-actions">
+        <button class="booking-back" type="button">Back to seats</button>
+      </div>
+    </section>
+    <section class="booking-confirmation" hidden>
+      <h3>Order confirmed</h3>
+      <p class="booking-order-reference"></p>
+      <div class="booking-order-details"></div>
+      <a class="booking-my-tickets" href="/tickets">My Tickets</a>
+      <button class="booking-confirmation-close" type="button">Close</button>
+    </section>
+  </div>
+</div>

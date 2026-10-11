@@ -1,0 +1,279 @@
+.movie-details-page {
+  min-height: calc(100vh - 130px);
+  background: var(--page-bg);
+}
+
+.movie-details-status {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  color: var(--text-secondary);
+}
+
+.movie-details-hero {
+  position: relative;
+  min-height: 420px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--raised-bg);
+}
+
+.movie-details-backdrop {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.movie-details-hero::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(7 12 28 / 94%), rgb(7 12 28 / 28%));
+  content: "";
+}
+
+.movie-details-hero-content {
+  display: flex;
+  align-items: end;
+  gap: 28px;
+  width: min(1440px, 100%);
+  min-height: 420px;
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+
+.movie-details-poster {
+  width: 190px;
+  aspect-ratio: 2 / 3;
+  flex: 0 0 auto;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 35%);
+}
+
+.movie-details-heading {
+  max-width: 720px;
+}
+
+.movie-details-kicker {
+  margin: 0 0 8px;
+  color: var(--reddish-helper);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.movie-details-heading h1 {
+  margin: 0 0 12px;
+  font-size: clamp(var(--font-h1), 4vw, var(--font-display));
+  font-weight: 800;
+}
+
+.movie-details-synopsis {
+  max-width: 640px;
+  margin: 0 0 18px;
+  color: var(--text-secondary);
+  font-size: var(--font-body-large);
+  line-height: 1.3;
+}
+
+.movie-details-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.movie-details-badges span {
+  padding: 6px 10px;
+  border: 1px solid var(--whitish-tint);
+  border-radius: 999px;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.movie-details-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 36px;
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+}
+
+.movie-details-screenings h2,
+.movie-details-facts h2 {
+  margin: 0 0 18px;
+  font-size: var(--font-h2);
+  font-weight: 800;
+}
+
+.movie-details-dates {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 14px;
+}
+
+.movie-details-date-option {
+  display: grid;
+  min-width: 52px;
+  min-height: 56px;
+  place-content: center;
+  gap: 3px;
+  border: 1px solid var(--whitish-tint);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.movie-details-date-option[aria-pressed="true"] {
+  border-color: var(--reddish-helper);
+  background: var(--reddish-tint);
+}
+
+.movie-details-date-option:disabled {
+  color: var(--test-disabled);
+  cursor: not-allowed;
+}
+
+.movie-details-date-day {
+  font-size: 11px;
+}
+
+.movie-details-date-number {
+  font-size: 14px;
+}
+
+.movie-details-venue-list {
+  display: grid;
+  gap: 14px;
+}
+
+.movie-details-venue h3 {
+  margin: 0 0 9px;
+  font-size: var(--font-h3);
+  font-weight: 800;
+}
+
+.movie-details-showtime-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.movie-details-showtime {
+  display: grid;
+  min-width: 128px;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid var(--whitish-tint);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.movie-details-showtime:hover:not([aria-disabled="true"]) {
+  border-color: var(--reddish-helper);
+}
+
+.movie-details-showtime-format {
+  color: var(--text-secondary);
+  font-size: var(--font-body-small);
+}
+
+.movie-details-showtime-price {
+  color: var(--reddish-helper);
+  font-weight: 700;
+}
+
+.movie-details-showtime[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.movie-details-age-error,
+.movie-details-rating-copy {
+  padding: 12px;
+  border: 1px solid var(--orangish-tint);
+  border-radius: 8px;
+  background: var(--orangish-tint);
+  color: #f4b35e;
+  font-size: var(--font-body-small);
+  line-height: 1.3;
+}
+
+.movie-details-age-error:empty {
+  display: none;
+}
+
+.movie-details-facts dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  margin: 0;
+}
+
+.movie-details-facts dt {
+  margin-top: 10px;
+  color: var(--text-secondary);
+  font-size: var(--font-overline);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+}
+
+.movie-details-facts dd {
+  margin: 0;
+  font-size: var(--font-body-medium);
+  line-height: 1.3;
+}
+
+.movie-details-rating-copy {
+  margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+  .movie-details-hero-content {
+    min-height: 400px;
+    align-items: end;
+    gap: 16px;
+    padding: 30px 18px;
+  }
+
+  .movie-details-poster {
+    width: 112px;
+  }
+
+  .movie-details-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px 18px 36px;
+  }
+
+  .movie-details-status {
+    padding: 20px 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-details-hero-content {
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .movie-details-poster {
+    width: 120px;
+  }
+
+  .movie-details-badges {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Kino XII</title>
+
+<!-- Bootstrap library import -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+/>
+
+<!-- native styles -->
+<link rel="stylesheet" href="styles/styles.css" />
+<link rel="stylesheet" href="styles/header-styles.css" />
+<link rel="stylesheet" href="styles/footer-styles.css" />
+<link rel="stylesheet" href="styles/modal-styles.css" />
+<link rel="stylesheet" href="styles/sign-up-modal-styles.css" />
+<link rel="stylesheet" href="styles/login-modal-styles.css" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet"
+/>
+  </head>
+  <body>
+    <main>
+      <section class="hero-carousel" aria-label="Featured movies">
+        <ul aria-live="polite"></ul>
+        <div class="carousel-controls" hidden>
+          <nav class="carousel-pagination" aria-label="Choose a featured movie"></nav>
+          <div class="carousel-arrows">
+            <button
+              class="carousel-button prev"
+              type="button"
+              aria-label="Previous slide"
+            ></button>
+            <button
+              class="carousel-button next"
+              type="button"
+              aria-label="Next slide"
+            ></button>
+          </div>
+        </div>
+        <p class="carousel-status" role="status" hidden></p>
+      </section>
+      <section
+        class="movie-section now-playing"
+        aria-label="Now Playing"
+      >
+        <div class="section-heading">
+          <h1 id="now-playing-title">Now Playing</h1>
+          <a class="section-link" href="/pages/movies.html?type=now-playing">See all</a>
+        </div>
+        <div class="movie-card-rail now-playing-rail"></div>
+        <p class="movie-section-status now-playing-status" role="status" hidden></p>
+      </section>
+      <section
+        class="movie-section recently-viewed"
+        id="recently-viewed-section"
+        aria-label="Recently viewed"
+        hidden
+      >
+        <div class="section-heading">
+          <h2>Recently Viewed</h2>
+        </div>
+        <div class="movie-card-rail now-playing-rail recently-viewed-rail"></div>
+        <p class="movie-section-status recently-viewed-status" role="status" hidden></p>
+      </section>
+      <section
+        class="movie-section coming-soon"
+        aria-label="Coming Soon"
+      >
+        <div class="section-heading">
+          <h2 id="coming-soon-title">Coming Soon...</h2>
+          <a class="section-link" href="/pages/movies.html?type=coming-soon">See all</a>
+        </div>
+        <div class="movie-card-rail coming-soon-rail"></div>
+        <p class="movie-section-status coming-soon-status" role="status" hidden></p>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="src/render-pages/add-header-start.js"></script>
+    <script type="module" src="src/render-pages/add-footer-end.js"></script>
+    <script type="module" src="src/interactivity/search.js"></script>
+    <script type="module" src="src/interactivity/recently-viewed.js"></script>
+    <script type="module" src="src/interactivity/carousel.js"></script>
+    <script type="module" src="src/render-pages/movie-sections.js"></script>
+    <script type="module" src="src/interactivity/signup-modal.js"></script>
+    <script type="module" src="src/interactivity/login-modal.js"></script>
+    <script type="module" src="src/interactivity/user-menu.js"></script>
+    <script type="module" src="src/render-pages/protected-actions.js"></script>
+  </body>
+</html>
