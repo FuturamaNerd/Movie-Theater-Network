@@ -1,4 +1,5 @@
 import {
+  buildSessionsUrlQuery,
   buildSessionsQuery,
   initializeSessionsPage,
   readSessionFilters,
@@ -99,6 +100,7 @@ function createPage() {
       <input id="sessions-date" type="date" />
       <div id="sessions-date-strip"></div>
       <div id="session-filter-groups"></div>
+      <p id="active-filter-count"></p>
     </aside>
     <header>
       <div class="header-search">
@@ -181,8 +183,17 @@ describe("sessions page", () => {
     );
     expect(document.querySelector("#sessions-pagination").hidden).toBe(false);
     expect(document.querySelector("#sessions-pagination").textContent).toContain(
-      "24 films",
+      "Page 1 of 3",
     );
+    expect(document.querySelector(".session-showtime:not(.is-sold-out)").tagName).toBe(
+      "A",
+    );
+    expect(document.querySelector(".session-showtime-price").textContent).toBe(
+      "from ₾14",
+    );
+    expect(
+      document.querySelector(".session-showtime.is-sold-out").hasAttribute("href"),
+    ).toBe(false);
   });
 
   it("narrows formats to selected venue capabilities and resets pagination", async () => {
@@ -204,8 +215,8 @@ describe("sessions page", () => {
     await new Promise((resolve) => window.setTimeout(resolve, 0));
 
     const params = new URLSearchParams(window.location.search);
-    expect(params.getAll("venues[]")).toEqual(["vake"]);
-    expect(params.getAll("formats[]")).toEqual([]);
+    expect(params.get("venue")).toBe("vake");
+    expect(params.get("format")).toBeNull();
     expect(params.get("page")).toBe("1");
     expect(
       document.querySelector('input[name="formats[]"][value="atmos"]'),
@@ -253,7 +264,7 @@ describe("sessions page", () => {
     window.history.replaceState(
       {},
       "",
-      "/pages/sessions.html?venues%5B%5D=galleria&formats%5B%5D=max&page=3",
+      "/pages/sessions.html?venues%5B%5D=galleria&formats%5B%5D=max&date=2026-11-14&page=3",
     );
     await initializeSessionsPage(document);
 
@@ -267,18 +278,72 @@ describe("sessions page", () => {
     let params = new URLSearchParams(location.search);
     expect(params.get("search")).toBe("Sample Movie");
     expect(params.get("page")).toBe("1");
-    expect(params.getAll("venues[]")).toEqual(["galleria"]);
-    expect(params.getAll("formats[]")).toEqual(["max"]);
+    expect(params.get("venue")).toBe("galleria");
+    expect(params.get("format")).toBe("max");
 
     document.querySelector("#clear-session-filters").click();
     await new Promise((resolve) => window.setTimeout(resolve, 0));
 
     params = new URLSearchParams(location.search);
-    expect(params.getAll("venues[]")).toEqual([]);
-    expect(params.getAll("formats[]")).toEqual([]);
+    expect(params.get("venue")).toBeNull();
+    expect(params.get("format")).toBeNull();
     expect(params.get("search")).toBeNull();
     expect(params.get("sort")).toBe("time_asc");
     expect(params.get("page")).toBe("1");
+    expect(params.get("date")).toBe("2026-11-14");
+    expect(document.querySelector("#active-filter-count").textContent).toBe(
+      "0 filters active",
+    );
+  });
+
+  it("supports the documented comma-separated URL state while keeping API arrays", () => {
+    const filters = readSessionFilters(
+      "?venue=galleria,vake&date=2026-11-14&format=max&language=georgian-dub&band=evening&page=2",
+    );
+    expect(filters).toMatchObject({
+      venues: ["galleria", "vake"],
+      formats: ["max"],
+      languages: ["georgian-dub"],
+      bands: ["evening"],
+      date: "2026-11-14",
+      page: 2,
+    });
+    const pageQuery = new URLSearchParams(buildSessionsUrlQuery(filters));
+    expect(pageQuery.get("venue")).toBe("galleria,vake");
+    expect(pageQuery.get("format")).toBe("max");
+    const apiQuery = new URLSearchParams(buildSessionsQuery(filters));
+    expect(apiQuery.getAll("venues[]")).toEqual(["galleria", "vake"]);
+    expect(apiQuery.getAll("formats[]")).toEqual(["max"]);
+  });
+
+  it("shows the next seven dates and selects the current date", async () => {
+    await initializeSessionsPage(document);
+    const dateButtons = [...document.querySelectorAll(".session-date-button")];
+    expect(dateButtons).toHaveLength(7);
+    expect(dateButtons[0].dataset.date).toBe(
+      new Date().toLocaleDateString("en-CA"),
+    );
+    expect(dateButtons.filter((button) => button.getAttribute("aria-pressed") === "true"))
+      .toHaveLength(1);
+    expect(document.querySelector("#sessions-date").max).not.toBe("");
+  });
+
+  it("renders the exact no-results message for an empty response", async () => {
+    window.fetch = jest.fn((url) =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve(
+            String(url).endsWith("/filter-options")
+              ? { data: filterOptions }
+              : { data: [], meta: { currentPage: 1, lastPage: 1, totalSessions: 0, totalMovies: 0 } },
+          ),
+      }),
+    );
+    await initializeSessionsPage(document);
+    expect(document.querySelector("#sessions-count").textContent).toBe(
+      "No sessions found",
+    );
   });
 
   it("restores filter controls and reloads results on browser history navigation", async () => {

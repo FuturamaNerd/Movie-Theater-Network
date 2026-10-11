@@ -103,7 +103,7 @@ if (carousel) {
 
           const allSessions = document.createElement("a");
           allSessions.className = "carousel-action carousel-all-sessions";
-          allSessions.href = "/sessions";
+          allSessions.href = "/pages/sessions.html";
           allSessions.textContent = "All sessions";
           actions.append(buyTickets, allSessions);
           content.append(actions);

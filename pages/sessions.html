@@ -23,7 +23,7 @@
         <aside class="sessions-filters" aria-label="Filter sessions">
           <div class="filter-heading">
             <h2>Filters</h2>
-            <button id="clear-session-filters" type="button">Clear all</button>
+            <button id="clear-session-filters" type="button">Clear All Filters</button>
           </div>
           <div class="sessions-date-filter">
             <label for="sessions-date">Date</label>
@@ -37,6 +37,9 @@
           <div id="session-filter-groups" class="session-filter-groups">
             <p class="filter-loading">Loading filters…</p>
           </div>
+          <div class="filter-footer">
+            <p id="active-filter-count" aria-live="polite">0 filters active</p>
+          </div>
         </aside>
 
         <section class="sessions-results" aria-label="Matching sessions">
@@ -49,7 +52,9 @@
 
           <p class="sessions-status" id="sessions-status" role="status" hidden></p>
           <div class="session-movie-list" id="session-movie-list" aria-live="polite"></div>
-          <nav class="sessions-pagination" id="sessions-pagination" aria-label="Sessions pages" hidden></nav>
+          <nav class="sessions-pagination" id="sessions-pagination" aria-label="Sessions pages" hidden>
+            <span id="sessions-page-summary"></span>
+          </nav>
         </section>
       </div>
     </main>

@@ -100,6 +100,25 @@ header {
   cursor: pointer;
 }
 
+.filter-heading button,
+.sessions-pagination button,
+.session-date-button,
+.session-filter-option input {
+  min-height: 32px;
+}
+
+.filter-footer {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--whitish-tint);
+}
+
+.filter-footer p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
 .session-filter-groups {
   display: grid;
   gap: 18px;
@@ -285,11 +304,34 @@ header {
   border: 1px solid var(--whitish-tint);
   border-radius: 7px;
   background: var(--card-bg);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+a.session-showtime:hover,
+a.session-showtime:focus-visible {
+  border-color: var(--reddish-helper);
+  outline: none;
+}
+
+a.session-showtime:focus-visible {
+  box-shadow: 0 0 0 2px var(--reddish-tint);
 }
 
 .session-showtime.is-sold-out {
   border-color: rgba(226, 126, 4, 0.4);
   background: rgba(226, 126, 4, 0.08);
+  cursor: not-allowed;
+}
+
+.session-showtime-format {
+  width: fit-content;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--raised-bg);
+  color: var(--text-primary);
+  font-size: 9px;
 }
 
 .session-showtime-time {
@@ -333,6 +375,7 @@ header {
 
 .sessions-pagination {
   justify-content: center;
+  flex-wrap: wrap;
   margin-top: 22px;
 }
 
@@ -364,6 +407,11 @@ header {
 .sessions-pagination span {
   color: var(--text-secondary);
   font-size: 12px;
+}
+
+.sessions-pagination #sessions-page-summary {
+  flex-basis: 100%;
+  text-align: center;
 }
 
 .filter-loading {

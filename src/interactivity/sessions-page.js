@@ -15,16 +15,41 @@ function localDate(date = new Date()) {
 
 export function readSessionFilters(search = window.location.search) {
   const params = new URLSearchParams(search);
+  const readArray = (shortName, apiName) => {
+    const values = [...params.getAll(shortName), ...params.getAll(apiName)];
+    return values.flatMap((value) => value.split(",")).filter(Boolean);
+  };
   return {
     date: params.get("date") || localDate(),
-    venues: params.getAll("venues[]"),
-    formats: params.getAll("formats[]"),
-    languages: params.getAll("languages[]"),
-    bands: params.getAll("bands[]"),
+    venues: readArray("venue", "venues[]"),
+    formats: readArray("format", "formats[]"),
+    languages: readArray("language", "languages[]"),
+    bands: readArray("band", "bands[]"),
     search: params.get("search") || "",
     sort: params.get("sort") || DEFAULT_SORT,
     page: Math.max(1, Number.parseInt(params.get("page") || "1", 10) || 1),
   };
+}
+
+export function buildSessionsUrlQuery(filters) {
+  const params = new URLSearchParams();
+  if (filters.venues.length) params.set("venue", filters.venues.join(","));
+  if (filters.date) params.set("date", filters.date);
+  if (filters.formats.length) params.set("format", filters.formats.join(","));
+  if (filters.languages.length) {
+    params.set("language", filters.languages.join(","));
+  }
+  if (filters.bands.length) params.set("band", filters.bands.join(","));
+  if (filters.search) params.set("search", filters.search);
+  params.set("sort", filters.sort || DEFAULT_SORT);
+  params.set("page", String(filters.page || 1));
+  return params.toString();
+}
+
+function addDays(date, days) {
+  const next = new Date(`${date}T12:00:00`);
+  next.setDate(next.getDate() + days);
+  return localDate(next);
 }
 
 export function buildSessionsQuery(filters) {
@@ -146,8 +171,7 @@ function dateLabel(dateString) {
 
 function renderDateStrip(doc, root, selectedDate) {
   root.replaceChildren();
-  const date = new Date(`${selectedDate}T12:00:00`);
-  date.setDate(date.getDate() - 3);
+  const date = new Date(`${localDate()}T12:00:00`);
   for (let offset = 0; offset < 7; offset += 1) {
     const dateValue = localDate(date);
     const label = dateLabel(dateValue);
@@ -167,9 +191,14 @@ function renderDateStrip(doc, root, selectedDate) {
 }
 
 function renderSessionCard(doc, session) {
-  const card = doc.createElement("article");
+  const card = doc.createElement(session.isSoldOut ? "article" : "a");
   card.className = "session-showtime";
-  if (session.isSoldOut) card.classList.add("is-sold-out");
+  if (session.isSoldOut) {
+    card.classList.add("is-sold-out");
+  } else {
+    card.href = `/pages/seat-selection.html?sessionId=${encodeURIComponent(session.id)}`;
+    card.dataset.requiresAuth = "true";
+  }
 
   const time = doc.createElement("div");
   time.className = "session-showtime-time";
@@ -187,14 +216,22 @@ function renderSessionCard(doc, session) {
   const venue = doc.createElement("span");
   venue.textContent = `${session.venue.name} · Hall ${session.hall.name}`;
   const format = doc.createElement("span");
+  format.className = "session-showtime-format";
   format.textContent = `${session.format.name} · ${session.language.name}`;
   const price = doc.createElement("strong");
   price.className = "session-showtime-price";
-  price.textContent = `${session.price} GEL`;
+  price.textContent = `from ₾${session.price}`;
   meta.append(venue, format, price);
 
   card.append(time, meta);
-  card.setAttribute("aria-label", `${session.time}, ${venue.textContent}, ${availability.textContent}`);
+  card.setAttribute(
+    "aria-label",
+    `${session.time}, ${venue.textContent}, ${availability.textContent}`,
+  );
+  if (session.isSoldOut) {
+    card.setAttribute("aria-disabled", "true");
+    card.tabIndex = -1;
+  }
   return card;
 }
 
@@ -238,8 +275,9 @@ function renderMovieGroups(doc, root, groups) {
 }
 
 function renderPagination(doc, nav, meta, onPageChange) {
+  const summary = nav.querySelector("#sessions-page-summary");
   nav.replaceChildren();
-  nav.hidden = meta.lastPage <= 1;
+  nav.hidden = meta.lastPage < 1;
   if (nav.hidden) return;
 
   const addButton = (text, page, label, current = false, disabled = false) => {
@@ -260,9 +298,10 @@ function renderPagination(doc, nav, meta, onPageChange) {
     addButton(String(page), page, `Page ${page}`, page === meta.currentPage);
   }
   addButton("›", meta.currentPage + 1, "Next page", false, meta.currentPage >= meta.lastPage);
-  const summary = doc.createElement("span");
-  summary.textContent = `${meta.totalMovies} films`;
-  nav.append(summary);
+  const pageSummary = summary || doc.createElement("span");
+  pageSummary.id = "sessions-page-summary";
+  pageSummary.textContent = `Page ${meta.currentPage} of ${meta.lastPage}`;
+  nav.append(pageSummary);
 }
 
 function selectedFilterValues(root) {
@@ -280,6 +319,17 @@ function showStatus(status, message) {
   status.textContent = message;
 }
 
+function renderActiveFilterCount(element, filters) {
+  if (!element) return;
+  const count =
+    filters.venues.length +
+    filters.formats.length +
+    filters.languages.length +
+    filters.bands.length +
+    Number(Boolean(filters.search));
+  element.textContent = `${count} filters active`;
+}
+
 export async function initializeSessionsPage(doc = document) {
   const page = doc.querySelector("#sessions-page");
   if (!page || page.dataset.initialized === "true") return;
@@ -294,6 +344,7 @@ export async function initializeSessionsPage(doc = document) {
   const groupsRoot = doc.querySelector("#session-movie-list");
   const pagination = doc.querySelector("#sessions-pagination");
   const count = doc.querySelector("#sessions-count");
+  const activeFilterCount = doc.querySelector("#active-filter-count");
   const status = doc.querySelector("#sessions-status");
   const clearButton = doc.querySelector("#clear-session-filters");
 
@@ -321,11 +372,11 @@ export async function initializeSessionsPage(doc = document) {
       }
 
       renderMovieGroups(doc, groupsRoot, result.data);
-      count.textContent = `Showing ${result.meta.totalSessions} sessions`;
-      showStatus(
-        status,
-        result.data.length === 0 ? "No sessions match these filters." : "",
-      );
+      count.textContent =
+        result.meta.totalSessions === 0 || result.data.length === 0
+          ? "No sessions found"
+          : `Showing ${result.meta.totalSessions} sessions`;
+      showStatus(status, "");
       renderPagination(doc, pagination, result.meta, (pageNumber) => {
         updateUrl({ ...filters, page: pageNumber }, false);
       });
@@ -338,16 +389,19 @@ export async function initializeSessionsPage(doc = document) {
 
   function syncControls() {
     dateInput.value = filters.date;
+    dateInput.min = localDate();
+    dateInput.max = addDays(localDate(), 6);
     if (searchInput) searchInput.value = filters.search;
     renderSortOptions(doc, sortSelect, filterOptions, filters.sort);
     renderFilters(doc, filtersRoot, filterOptions, filters);
     renderDateStrip(doc, dateStrip, filters.date);
+    renderActiveFilterCount(activeFilterCount, filters);
   }
 
   function updateUrl(nextFilters, replace = false) {
     filters = nextFilters;
     const url = new URL(doc.defaultView.location.href);
-    url.search = buildSessionsQuery(filters);
+    url.search = buildSessionsUrlQuery(filters);
     if (replace) {
       doc.defaultView.history.replaceState({}, "", url);
     } else {
@@ -434,7 +488,7 @@ export async function initializeSessionsPage(doc = document) {
     };
     if (searchButton) searchButton.disabled = false;
     const normalizedUrl = new URL(doc.defaultView.location.href);
-    normalizedUrl.search = buildSessionsQuery(filters);
+    normalizedUrl.search = buildSessionsUrlQuery(filters);
     doc.defaultView.history.replaceState({}, "", normalizedUrl);
     syncControls();
     await fetchSessions();
@@ -471,7 +525,7 @@ export async function initializeSessionsPage(doc = document) {
   clearButton.addEventListener("click", () => {
     updateUrl(
       {
-        date: localDate(),
+        date: filters.date,
         venues: [],
         formats: [],
         languages: [],

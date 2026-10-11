@@ -23,6 +23,10 @@ describe("carousel controls", () => {
       .eq(0)
       .find("img")
       .should("have.attr", "src", "https://example.test/first.jpg");
+    cy.get(slides)
+      .eq(0)
+      .find(".carousel-all-sessions")
+      .should("have.attr", "href", "/pages/sessions.html");
     cy.get(slides).eq(0).should("have.css", "opacity", "1");
     cy.get(slides).eq(1).should("have.css", "opacity", "0");
 
