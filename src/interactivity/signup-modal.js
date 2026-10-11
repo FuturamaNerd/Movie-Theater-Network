@@ -1,4 +1,4 @@
-import { initializeRegistrationForm } from "../interactivity/registration-validation.js";
+import { initializeRegistrationForm } from "../Auth/registration-validation.js";
 
 export function initializeSignupModal(doc = document) {
   const signupButton = doc.querySelector(".sign-up-button");

@@ -1,0 +1,187 @@
+.login-modal {
+  background: #050917;
+}
+
+.login-modal .modal-dialog {
+  min-height: 100%;
+}
+
+.login-modal .modal-content {
+  padding: 14px 9px 24px;
+}
+
+.login-modal .modal-header {
+  padding: 8px 1px 13px;
+}
+
+.login-modal .modal-title {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.login-modal .btn-close {
+  width: 12px;
+  height: 12px;
+  margin: 0 3px 0 auto;
+  padding: 0;
+  background-size: 12px;
+}
+
+.login-subtitle {
+  margin: 3px 0 0;
+  color: var(--modal-muted);
+  font-size: 8px;
+  line-height: 1.3;
+}
+
+.login-modal .modal-body {
+  padding: 0;
+}
+
+.login-field {
+  min-width: 0;
+}
+
+.login-field + .login-field {
+  margin-top: 16px;
+}
+
+.login-modal .form-label {
+  margin: 0 0 5px;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.login-modal .form-control {
+  height: 27px;
+  min-height: 27px;
+  padding: 5px 10px;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.login-field.is-invalid .form-label {
+  color: #ec3013;
+}
+
+.login-input-wrapper {
+  position: relative;
+}
+
+.login-modal .form-control.registration-valid,
+.login-modal .form-control.registration-invalid {
+  padding-right: 32px;
+}
+
+.login-modal .form-control.registration-valid {
+  border-color: #4ade80;
+}
+
+.login-modal .form-control.registration-invalid {
+  border-color: #ec3013;
+  box-shadow: 0 0 0 1px #ec3013;
+}
+
+.login-validation-icon:not([hidden]) {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  display: block;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%);
+}
+
+.login-validation-message:not([hidden]) {
+  margin: 5px 0 0;
+  color: #ec3013;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.login-status:not([hidden]) {
+  margin: 12px 0 0;
+  color: #ec3013;
+  font-size: 9px;
+  text-align: center;
+}
+
+.login-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 15px;
+  padding: 18px 0 0;
+}
+
+.login-modal .login-submit {
+  width: 100%;
+  justify-self: stretch;
+  min-height: 27px;
+  padding: 5px 12px;
+  color: #fff;
+  font-size: 9px;
+  background: #ec3013;
+  border: 0;
+  border-radius: 999px;
+}
+
+.login-modal .login-submit:hover,
+.login-modal .login-submit:focus-visible {
+  color: #fff;
+  background: #f04436;
+}
+
+.login-signup-prompt {
+  margin: 0;
+  color: var(--modal-muted);
+  font-size: 9px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.login-signup-prompt a {
+  margin-left: 2px;
+  color: var(--modal-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-signup-prompt a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 576px) {
+  .login-modal .modal-content {
+    padding: 18px 20px 16px;
+  }
+
+  .login-modal .modal-title {
+    font-size: 18px;
+  }
+
+  .login-subtitle,
+  .login-modal .form-label,
+  .login-modal .form-control,
+  .login-validation-message:not([hidden]) {
+    font-size: 11px;
+  }
+
+  .login-status:not([hidden]) {
+    font-size: 12px;
+  }
+
+  .login-modal .form-control {
+    height: 38px;
+  }
+
+  .login-modal .login-submit {
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  .login-signup-prompt {
+    font-size: 12px;
+  }
+}

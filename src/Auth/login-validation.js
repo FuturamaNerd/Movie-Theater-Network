@@ -1,0 +1,206 @@
+import { validateLoginFields } from "./registration-validation.js";
+
+const LOGIN_ENDPOINT =
+  "https://api.kinoxii.redberryinternship.ge/api/login";
+
+export function validateLogin(credentials) {
+  const errors = validateLoginFields(credentials);
+  return { isValid: Object.keys(errors).length === 0, errors };
+}
+
+export function initializeLoginForm(form, doc = document) {
+  if (form.dataset.loginInitialized === "true") return;
+  form.dataset.loginInitialized = "true";
+
+  const feedback = new Map();
+  for (const fieldName of ["email", "password"]) {
+    const field = form.elements.namedItem(fieldName);
+    const wrapper = doc.createElement("div");
+    wrapper.className = "login-input-wrapper";
+    field.before(wrapper);
+    wrapper.append(field);
+
+    const icon = doc.createElement("img");
+    icon.className = "login-validation-icon";
+    icon.alt = "";
+    icon.hidden = true;
+    icon.setAttribute("aria-hidden", "true");
+    wrapper.append(icon);
+
+    const message = doc.createElement("p");
+    message.className = "login-validation-message";
+    message.id = `login-${fieldName}-message`;
+    message.hidden = true;
+    wrapper.after(message);
+    field.setAttribute("aria-describedby", message.id);
+    feedback.set(fieldName, { field, icon, message });
+  }
+
+  function readCredentials() {
+    return {
+      email: form.elements.namedItem("email").value.trim(),
+      password: form.elements.namedItem("password").value,
+    };
+  }
+
+  const touchedFields = new Set();
+  function updateField(fieldName, errors = validateLogin(readCredentials()).errors) {
+    const item = feedback.get(fieldName);
+    if (!item) return;
+
+    const { field, icon, message } = item;
+    const error = errors[fieldName];
+    const hasValue = field.value.length > 0;
+    field.classList.remove("registration-valid", "registration-invalid");
+    field.closest(".login-field")?.classList.toggle("is-invalid", Boolean(error));
+    field.setAttribute("aria-invalid", error ? "true" : "false");
+    icon.hidden = true;
+    message.hidden = true;
+    message.textContent = "";
+
+    if (error) {
+      field.classList.add("registration-invalid");
+      icon.src = "/styles/SVG/exclamation-warning-invalid.svg";
+      icon.hidden = false;
+      message.textContent = error;
+      message.hidden = false;
+    } else if (hasValue) {
+      field.classList.add("registration-valid");
+      icon.src = "/styles/SVG/checkmark-valid.svg";
+      icon.hidden = false;
+    } else {
+      field.removeAttribute("aria-invalid");
+    }
+  }
+
+  function updateCredentialFeedback(fieldName) {
+    touchedFields.add(fieldName);
+    for (const touchedField of touchedFields) updateField(touchedField);
+  }
+
+  for (const { field } of feedback.values()) {
+    field.addEventListener("input", () => updateCredentialFeedback(field.name));
+    field.addEventListener("change", () => updateCredentialFeedback(field.name));
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const credentials = readCredentials();
+    const validation = validateLogin(credentials);
+    for (const fieldName of feedback.keys()) {
+      touchedFields.add(fieldName);
+      updateField(fieldName, validation.errors);
+    }
+    if (!validation.isValid) return;
+
+    const status = form.querySelector("[role='status']");
+    if (status) {
+      status.hidden = true;
+      status.textContent = "";
+    }
+
+    try {
+      const response = await doc.defaultView.fetch(LOGIN_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
+      });
+
+      if (response.status === 401 || response.status === 422) {
+        for (const fieldName of feedback.keys()) {
+          const item = feedback.get(fieldName);
+          item.field.classList.remove("registration-valid");
+          item.field.classList.add("registration-invalid");
+          item.field.closest(".login-field")?.classList.add("is-invalid");
+          item.field.setAttribute("aria-invalid", "true");
+          item.icon.src = "/styles/SVG/exclamation-warning-invalid.svg";
+          item.icon.hidden = false;
+          item.message.textContent = "Invalid credentials.";
+          item.message.hidden = false;
+        }
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.status}`);
+      }
+
+      doc.dispatchEvent(
+        new doc.defaultView.CustomEvent("auth:login", {
+          detail: { email: credentials.email },
+        }),
+      );
+      const loginModal = form.closest("#loginModal");
+      if (loginModal && doc.defaultView.bootstrap?.Modal) {
+        doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).hide();
+      }
+    } catch (error) {
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Unable to log in. Please try again.";
+      }
+      console.error(error);
+    }
+  });
+
+  const signupLink = form.querySelector(".login-signup-link");
+  if (signupLink) {
+    signupLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      const loginModal = form.closest("#loginModal");
+      const signupButton = doc.querySelector(".sign-up-button");
+      if (!loginModal || !signupButton || !doc.defaultView.bootstrap?.Modal) {
+        throw new Error("Unable to open the sign-up modal");
+      }
+
+      loginModal.addEventListener(
+        "hidden.bs.modal",
+        () => signupButton.click(),
+        { once: true },
+      );
+      doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).hide();
+    });
+  }
+}
+
+export function initializeLoginModal(doc = document) {
+  const loginButton = doc.querySelector(".login-button");
+  if (!loginButton) return;
+
+  loginButton.addEventListener("click", async () => {
+    let loginModal = doc.querySelector("#loginModal");
+
+    if (!loginModal) {
+      const response = await doc.defaultView.fetch(
+        "/supplementary-content/login-modal.html",
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to load login modal: ${response.status}`);
+      }
+
+      const modalDocument = new doc.defaultView.DOMParser().parseFromString(
+        await response.text(),
+        "text/html",
+      );
+      loginModal = modalDocument.querySelector("#loginModal");
+      if (!loginModal) {
+        throw new Error("Login modal markup was not found in the response");
+      }
+      doc.body.append(loginModal);
+    }
+
+    initializeLoginForm(loginModal.querySelector("form"), doc);
+    doc.defaultView.bootstrap.Modal.getOrCreateInstance(loginModal).show();
+  });
+}
+
+if (typeof document !== "undefined") {
+  if (document.querySelector(".login-button")) {
+    initializeLoginModal();
+  } else {
+    document.addEventListener(
+      "header:rendered",
+      () => initializeLoginModal(),
+      { once: true },
+    );
+  }
+}

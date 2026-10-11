@@ -111,6 +111,41 @@
   line-height: 1.2;
 }
 
+.signup-input-wrapper {
+  position: relative;
+}
+
+.signup-modal .form-control.registration-valid,
+.signup-modal .form-control.registration-invalid {
+  padding-right: 32px;
+}
+
+.signup-modal .form-control.registration-valid {
+  border-color: #4ade80;
+}
+
+.signup-modal .form-control.registration-invalid {
+  border-color: #ec3013;
+  box-shadow: 0 0 0 1px #ec3013;
+}
+
+.registration-validation-icon:not([hidden]) {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  display: block;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%);
+}
+
+.registration-validation-message:not([hidden]) {
+  margin: 5px 0 0;
+  color: #ec3013;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
 .signup-password-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -187,6 +222,10 @@
 
   .signup-modal .form-control {
     height: 38px;
+  }
+
+  .registration-validation-message:not([hidden]) {
+    font-size: 11px;
   }
 
   .signup-modal .signup-submit {

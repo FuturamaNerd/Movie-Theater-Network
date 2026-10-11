@@ -10,7 +10,7 @@ describe("sign-up modal", () => {
 
   it("opens when the header sign-up button is clicked", () => {
     const modalMarkup =
-      '<div id="signupModal" class="modal" aria-hidden="true"></div>';
+      '<div id="signupModal" class="modal" aria-hidden="true"><form></form></div>';
     const showModal = jest.fn().mockImplementation(() => {
       const modal = document.querySelector("#signupModal");
       modal.classList.add("show");
