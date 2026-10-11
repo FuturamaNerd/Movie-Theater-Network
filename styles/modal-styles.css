@@ -9,9 +9,14 @@
 }
 
 .theater-modal .modal-dialog {
-  width: min(100%, 420px);
+  width: min(calc(100% - 1rem), 475px);
   max-width: none;
-  margin: 0 auto;
+  margin: 0.5rem auto;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+  backdrop-filter: blur(10px);
 }
 
 .theater-modal .modal-content {

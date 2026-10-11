@@ -1,9 +1,5 @@
-.login-modal {
-  background: #050917;
-}
-
 .login-modal .modal-dialog {
-  min-height: 100%;
+  width: min(calc(100% - 1rem), 390px);
 }
 
 .login-modal .modal-content {
