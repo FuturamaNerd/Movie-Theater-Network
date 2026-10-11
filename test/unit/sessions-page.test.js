@@ -1,9 +1,17 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   buildSessionsUrlQuery,
   buildSessionsQuery,
   initializeSessionsPage,
   readSessionFilters,
 } from "../../src/render-pages/sessions-page.js";
+import { saveAuthSession } from "../../src/Auth/auth-session.js";
+
+const bookingModalMarkup = readFileSync(
+  join(process.cwd(), "supplementary-content", "booking-modal.html"),
+  "utf8",
+);
 
 const filterOptions = {
   venues: [
@@ -43,6 +51,11 @@ const filterOptions = {
     { id: "price_asc", label: "Price: low to high" },
     { id: "title_asc", label: "Title: A-Z" },
   ],
+  ticketTypes: [
+    { id: 1, slug: "adult", name: "Adult", priceRatio: 1, note: null, blockedFromRatingAge: null },
+  ],
+  maxSeatsPerOrder: 3,
+  holdMinutes: 8,
 };
 
 const movie = {
@@ -119,6 +132,40 @@ function createPage() {
   `;
 
   window.fetch = jest.fn((url) => {
+    if (String(url).endsWith("/supplementary-content/booking-modal.html")) {
+      return Promise.resolve({
+        ok: true,
+        text: () => Promise.resolve(bookingModalMarkup),
+      });
+    }
+    if (String(url).endsWith("/sessions/7/seats")) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({
+          data: {
+            sessionId: 7,
+            hall: session.hall,
+            sections: [{
+              name: "Stalls",
+              rows: [{
+                label: "A",
+                seats: [{
+                  id: 71,
+                  code: "A1",
+                  label: "1",
+                  state: "available",
+                  aisleAfter: false,
+                  isMine: false,
+                }],
+              }],
+            }],
+          },
+        }),
+      });
+    }
+    if (String(url).endsWith("/sessions/7")) {
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({ data: session }) });
+    }
     if (String(url).endsWith("/filter-options")) {
       return Promise.resolve({
         ok: true,
@@ -197,6 +244,35 @@ describe("sessions page", () => {
     expect(
       document.querySelector(".session-showtime.is-sold-out").hasAttribute("href"),
     ).toBe(false);
+  });
+
+  it("opens the booking modal when a session showtime is selected", async () => {
+    saveAuthSession(
+      {
+        token: "test-token",
+        user: {
+          id: 1,
+          username: "jane",
+          email: "jane@example.test",
+          fullName: "Jane Example",
+          age: 30,
+          profileComplete: true,
+        },
+      },
+      window.sessionStorage,
+    );
+    await initializeSessionsPage(document);
+
+    document.querySelector(".session-showtime:not(.is-sold-out)").click();
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+
+    const modal = document.querySelector(".booking-modal");
+    expect(modal).not.toBeNull();
+    expect(modal.textContent).toContain("Sample Movie");
+    expect(modal.querySelector(".booking-seat-section").textContent).toContain(
+      "Stalls",
+    );
+    expect(modal.querySelector('[data-seat-code="A1"]')).not.toBeNull();
   });
 
   it("narrows formats to selected venue capabilities and resets pagination", async () => {

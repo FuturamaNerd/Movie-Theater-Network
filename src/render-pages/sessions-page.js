@@ -1,4 +1,5 @@
 import { handleUnauthorizedResponse } from "../Auth/auth-session.js";
+import { openBookingModal } from "../interactivity/booking-modal.js";
 
 const API_BASE = "https://api.kinoxii.redberryinternship.ge/api";
 const FILTER_OPTIONS_URL = `${API_BASE}/filter-options`;
@@ -190,7 +191,7 @@ function renderDateStrip(doc, root, selectedDate) {
   }
 }
 
-function renderSessionCard(doc, session) {
+function renderSessionCard(doc, session, movie) {
   const card = doc.createElement(session.isSoldOut ? "article" : "a");
   card.className = "session-showtime";
   if (session.isSoldOut) {
@@ -198,6 +199,21 @@ function renderSessionCard(doc, session) {
   } else {
     card.href = `/pages/seat-selection.html?sessionId=${encodeURIComponent(session.id)}`;
     card.dataset.requiresAuth = "true";
+    card.addEventListener("click", (event) => {
+      event.preventDefault();
+      const sessionMovie = session.movie || movie;
+      if (!sessionMovie) {
+        console.error(`Session ${session.id} is missing its movie details.`);
+        return;
+      }
+      openBookingModal(doc, session.id, sessionMovie).catch((error) => {
+        console.error("Unable to open booking:", error);
+        const status = doc.querySelector("#sessions-status");
+        if (status) {
+          showStatus(status, "Unable to open booking. Please try again.");
+        }
+      });
+    });
   }
 
   const time = doc.createElement("div");
@@ -269,7 +285,7 @@ function renderMovieGroups(doc, root, groups) {
     const showtimes = doc.createElement("div");
     showtimes.className = "session-showtimes";
     for (const session of group.sessions) {
-      showtimes.append(renderSessionCard(doc, session));
+      showtimes.append(renderSessionCard(doc, session, movie));
     }
     details.append(heading, genres, showtimes);
     article.append(poster, details);

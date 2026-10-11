@@ -80,6 +80,49 @@ function mockFilmDetails({ currentUser, sessions = showtimeGroups } = {}) {
     }
     request.reply({ body: { data: currentUser.user } });
   });
+  cy.intercept("GET", "**/api/sessions/705", {
+    body: {
+      data: {
+        ...showtimeGroups[0].sessions[0],
+        movie,
+      },
+    },
+  });
+  cy.intercept("GET", "**/api/sessions/705/seats", {
+    body: {
+      data: {
+        sessionId: 705,
+        hall: showtimeGroups[0].sessions[0].hall,
+        sections: [{
+          name: "Stalls",
+          rows: [{
+            label: "A",
+            seats: [{
+              id: 1,
+              code: "A1",
+              label: "1",
+              state: "available",
+              aisleAfter: false,
+              isMine: false,
+            }],
+          }],
+        }],
+      },
+    },
+  });
+  cy.intercept("GET", "**/api/filter-options", {
+    body: {
+      data: {
+        ticketTypes: [
+          { id: 1, slug: "adult", name: "Adult", priceRatio: 1, note: null, blockedFromRatingAge: null },
+          { id: 2, slug: "child", name: "Child", priceRatio: 0.6, note: null, blockedFromRatingAge: 16 },
+          { id: 3, slug: "student", name: "Student", priceRatio: 0.75, note: null, blockedFromRatingAge: null },
+        ],
+        maxSeatsPerOrder: 3,
+        holdMinutes: 8,
+      },
+    },
+  });
 }
 
 function visitFilmDetails(currentUser) {
@@ -108,8 +151,9 @@ describe("Feature: Choosing a film and screening from its details", () => {
       .and("contain", "₾12")
       .and("contain", "5 seats")
       .click();
-    cy.location("pathname").should("eq", "/pages/seat-selection.html");
-    cy.location("search").should("include", "sessionId=705");
+    cy.get(".booking-modal").should("be.visible").and("contain", movie.title);
+    cy.get(".booking-seat-section").should("contain", "Stalls");
+    cy.get(".booking-seat").should("contain", "1");
   });
 
   it("offers the next seven days and groups showtimes under their venue", () => {
@@ -235,7 +279,7 @@ describe("Feature: Choosing a film and screening from its details", () => {
     visitFilmDetails(adultSession);
 
     cy.get(".movie-details-showtime").first().click();
-    cy.location("pathname").should("eq", "/pages/seat-selection.html");
-    cy.location("search").should("include", "sessionId=705");
+    cy.get(".booking-modal").should("be.visible").and("contain", movie.title);
+    cy.get(".booking-seat-section").should("contain", "Stalls");
   });
 });

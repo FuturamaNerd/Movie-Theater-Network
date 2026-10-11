@@ -3,6 +3,7 @@ import {
   restoreAuthSession,
 } from "../Auth/auth-session.js";
 import { recordRecentlyViewedMovie } from "../interactivity/recently-viewed.js";
+import { openBookingModal } from "../interactivity/booking-modal.js";
 
 const API_BASE = "https://api.kinoxii.redberryinternship.ge/api";
 
@@ -242,7 +243,7 @@ export async function initializeMovieDetailsPage(
     const dates = nextSevenDates(today);
     const selectedDate =
       dates.find((date) => movie.availableDates.includes(date)) || todayValue;
-    const onShowtimeClick = (_session, event, showtime) => {
+    const onShowtimeClick = (selectedSession, event, showtime) => {
       const session = getAuthSession(doc.defaultView.sessionStorage);
       const user = session?.user;
       if (
@@ -262,7 +263,10 @@ export async function initializeMovieDetailsPage(
               ageError.hidden = false;
               return;
             }
-            doc.defaultView.location.assign(showtime.href);
+            openBookingModal(doc, selectedSession.id, movie).catch((error) => {
+              console.error("Unable to open booking:", error);
+              showStatus(doc, "Unable to open booking. Please try again.");
+            });
           })
           .catch((error) => {
             console.error(error);
@@ -277,7 +281,10 @@ export async function initializeMovieDetailsPage(
         ageError.hidden = false;
         return true;
       }
-      return false;
+      openBookingModal(doc, selectedSession.id, movie).catch((error) => {
+        console.error("Unable to open booking:", error);
+      });
+      return true;
     };
     let currentGroups = [];
     doc.addEventListener("auth:login", () => {

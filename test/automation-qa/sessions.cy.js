@@ -67,6 +67,13 @@ const filterOptions = {
     { id: "price_desc", label: "Price: high to low" },
     { id: "title_asc", label: "Title: A-Z" },
   ],
+  ticketTypes: [
+    { id: 1, slug: "adult", name: "Adult", priceRatio: 1, note: null, blockedFromRatingAge: null },
+    { id: 2, slug: "child", name: "Child", priceRatio: 0.6, note: null, blockedFromRatingAge: 16 },
+    { id: 3, slug: "student", name: "Student", priceRatio: 0.75, note: null, blockedFromRatingAge: null },
+  ],
+  maxSeatsPerOrder: 3,
+  holdMinutes: 8,
 };
 
 const showing = {
@@ -154,5 +161,47 @@ describe("Feature: Finding a screening that fits my plans", () => {
     cy.get(".session-showtime.is-sold-out")
       .should("have.attr", "aria-disabled", "true")
       .and("not.have.attr", "href");
+
+    cy.intercept("GET", "**/api/sessions/705", {
+      body: { data: showing },
+    });
+    cy.intercept("GET", "**/api/sessions/705/seats", {
+      body: {
+        data: {
+          sessionId: 705,
+          hall: showing.hall,
+          sections: [{
+            name: "Stalls",
+            rows: [{
+              label: "A",
+              seats: [{
+                id: 7051,
+                code: "A1",
+                label: "1",
+                state: "available",
+                aisleAfter: false,
+                isMine: false,
+              }],
+            }],
+          }],
+        },
+      },
+    });
+    cy.window().then((win) => {
+      win.sessionStorage.setItem("auth-session", JSON.stringify({
+        token: "test-token",
+        user: {
+          id: 1,
+          username: "jane",
+          email: "jane@example.test",
+          fullName: "Jane Example",
+          age: 30,
+          profileComplete: true,
+        },
+      }));
+    });
+    cy.get(".session-showtime:not(.is-sold-out)").first().click();
+    cy.get(".booking-modal").should("be.visible").and("contain", movie.title);
+    cy.get(".booking-seat-section").should("contain", "Stalls");
   });
 });

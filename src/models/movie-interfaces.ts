@@ -93,6 +93,108 @@ export interface SessionData {
   movie: MovieData;
 }
 
+export type SeatState = "available" | "sold" | "held" | "unavailable";
+export type TicketTypeSlug = "adult" | "child" | "student";
+
+export interface TicketType {
+  id: number;
+  slug: TicketTypeSlug;
+  name: string;
+  priceRatio: number;
+  note: string | null;
+  blockedFromRatingAge: number | null;
+}
+
+export interface SeatData {
+  id: number;
+  code: string;
+  label: string;
+  state: SeatState;
+  aisleAfter: boolean;
+  isMine: boolean;
+}
+
+export interface SeatRow {
+  label: string;
+  seats: SeatData[];
+}
+
+export interface SeatSection {
+  name: string;
+  rows: SeatRow[];
+}
+
+export interface SeatMap {
+  sessionId: number;
+  hall: {
+    id: number;
+    name: string;
+    venue: VenueData;
+  };
+  sections: SeatSection[];
+}
+
+export interface BookingFilterOptions {
+  ticketTypes: TicketType[];
+  maxSeatsPerOrder: number;
+  holdMinutes: number;
+}
+
+export interface SeatHold {
+  holdId: string;
+  sessionId: number;
+  expiresAt: string;
+  secondsRemaining: number;
+  isLive: boolean;
+  subtotal: number;
+  seats: Array<{
+    seatId: number;
+    code: string;
+    ticketType: { slug: TicketTypeSlug; name: string };
+    price: number;
+  }>;
+}
+
+export interface OrderData {
+  id: number;
+  reference: string;
+  status: "paid" | "refunded";
+  totalPrice: number;
+  paidAt: string;
+  refundedAt: string | null;
+  isUpcoming: boolean;
+  isRefundable: boolean;
+  cardLastFour: string;
+  contact: {
+    fullName: string;
+    email: string;
+    mobileNumber: string;
+  };
+  session: SessionData;
+  tickets: Array<{
+    id: number;
+    seatCode: string;
+    ticketType: { slug: TicketTypeSlug; name: string };
+    price: number;
+  }>;
+}
+
+export interface BookingOptionsResponse {
+  data: BookingFilterOptions;
+}
+
+export interface SeatMapResponse {
+  data: SeatMap;
+}
+
+export interface SeatHoldResponse {
+  data: SeatHold;
+}
+
+export interface OrderResponse {
+  data: OrderData;
+}
+
 export interface MovieSessionGroup {
   movie: MovieData;
   sessions: SessionData[];
