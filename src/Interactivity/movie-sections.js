@@ -44,7 +44,7 @@ function createMovieCard(movie, isNowPlaying) {
   if (isNowPlaying) {
     const buyTicket = document.createElement("a");
     buyTicket.className = "movie-card-buy-ticket";
-    buyTicket.href = `/sessions?movie=${encodeURIComponent(movie.slug)}`;
+    buyTicket.href = `/pages/sessions.html?search=${encodeURIComponent(movie.title)}`;
     buyTicket.textContent = "Buy Ticket";
     footer.append(buyTicket);
   }

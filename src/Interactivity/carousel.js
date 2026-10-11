@@ -98,7 +98,7 @@ if (carousel) {
           actions.className = "carousel-actions";
           const buyTickets = document.createElement("a");
           buyTickets.className = "carousel-action carousel-buy-tickets";
-          buyTickets.href = `/sessions?movie=${encodeURIComponent(movie.slug)}`;
+          buyTickets.href = `/pages/sessions.html?search=${encodeURIComponent(movie.title)}`;
           buyTickets.textContent = "Buy tickets";
 
           const allSessions = document.createElement("a");
